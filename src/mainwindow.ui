@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>419</width>
+    <width>639</width>
     <height>333</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>421</width>
+      <width>641</width>
       <height>271</height>
      </rect>
     </property>
@@ -28,7 +28,7 @@
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Tab 1</string>
+      <string>Main</string>
      </attribute>
      <widget class="QPushButton" name="Tab1AddButton">
       <property name="geometry">
@@ -48,7 +48,7 @@
        <rect>
         <x>11</x>
         <y>42</y>
-        <width>121</width>
+        <width>151</width>
         <height>20</height>
        </rect>
       </property>
@@ -69,7 +69,7 @@
      <widget class="QPushButton" name="Tab1Setting">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>190</x>
         <y>40</y>
         <width>75</width>
         <height>23</height>
@@ -82,7 +82,7 @@
      <widget class="QPushButton" name="Tab1PDF">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>290</x>
         <y>40</y>
         <width>75</width>
         <height>23</height>
@@ -97,7 +97,7 @@
        <rect>
         <x>10</x>
         <y>100</y>
-        <width>391</width>
+        <width>611</width>
         <height>141</height>
        </rect>
       </property>
@@ -108,40 +108,45 @@
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>Status</string>
      </attribute>
      <widget class="QTableWidget" name="Tab2StatusTable">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>391</width>
+        <width>611</width>
         <height>221</height>
        </rect>
       </property>
-      <row>
-       <property name="text">
-        <string>Fairy Tail</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>Bleach</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>Naruto</string>
-       </property>
-      </row>
       <column>
        <property name="text">
-        <string>Chapitre</string>
+        <string>Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Chapter</string>
        </property>
       </column>
       <column>
        <property name="text">
         <string>Date</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Tome</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Folder</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>URL</string>
        </property>
       </column>
      </widget>
@@ -162,7 +167,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>419</width>
+     <width>639</width>
      <height>21</height>
     </rect>
    </property>
