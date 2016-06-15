@@ -16,11 +16,8 @@ public:
     ~MainWindow();
 private slots:
     void slotTab1AddButton();
-private slots:
     void slotTab1Setting();
-private slots:
     void slotTab1Pdf();
-private slots:
     void slotTab1Search();
 private:
     Ui::MainWindow *ui;
