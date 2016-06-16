@@ -19,8 +19,13 @@ private slots:
     void slotTab1Setting();
     void slotTab1Pdf();
     void slotTab1Search();
+    void slotTab1Delete();
 private:
     Ui::MainWindow *ui;
+    enum Column
+    {
+       NAME, CHAPTER, DATE, VOLUME, FOLDER, URL
+    };
 };
 
 #endif // MAINWINDOW_H

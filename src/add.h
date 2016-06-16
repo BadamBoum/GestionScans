@@ -16,6 +16,7 @@ public:
     ~Add();
 private slots:
     void slotAddOkButton();
+    void slotAddCancelButton();
 private:
     Ui::Add *ui;
 };

@@ -1,4 +1,4 @@
-Fairy Tail;http://www.lirescan.com/images/lecture-en-ligne/fairy-tail/[Chapter]/[Image].jpg;D:\Documents\Scans\Fairy Tail;57;489;13062016
-Hunter x Hunter;http://www.lirescan.com/images/lecture-en-ligne/hunter-x-hunter/[Chapter]/[Image].jpg;D:\Documents\Scans\Hunter x Hunter;34;357;09062016
-Bleach;http://www.lirescan.com/images/lecture-en-ligne/bleach/[Chapter]/[Image].png;D:\Documents\Scans\Bleach;74;677;09062016
-One Piece;http://www.lirescan.com/images/lecture-en-ligne/one-piece/[Chapter]/[Image].png;D:\Documents\Scans\One Piece;83;828;02062016
+Fairy Tail;489;13/06/2016;57;D:\Documents\Scans\Fairy Tail;http://www.lirescan.com/images/lecture-en-ligne/fairy-tail/[Chapter]/[Image].jpg
+Hunter x Hunter;357;09/06/2016;34;D:\Documents\Scans\Hunter x Hunter;http://www.lirescan.com/images/lecture-en-ligne/hunter-x-hunter/[Chapter]/[Image].jpg
+Bleach;677;09/06/2016;74;D:\Documents\Scans\Bleach;http://www.lirescan.com/images/lecture-en-ligne/bleach/[Chapter]/[Image].jpg
+One Piece;828;02/06/2016;83;D:\Documents\Scans\One Piece;http://www.lirescan.com/images/lecture-en-ligne/one-piece/[Chapter]/[Image].jpg

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Scans Manager</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -43,7 +43,7 @@
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="Tab1ListOfManga">
+     <widget class="QComboBox" name="Tab1SelectedSerie">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -51,6 +51,12 @@
         <width>161</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="editable">
+       <bool>false</bool>
+      </property>
+      <property name="insertPolicy">
+       <enum>QComboBox::InsertAlphabetically</enum>
       </property>
      </widget>
      <widget class="QPushButton" name="Tab1Search">
@@ -145,6 +151,15 @@
         <height>221</height>
        </rect>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="tabKeyNavigation">
+       <bool>false</bool>
+      </property>
+      <property name="showDropIndicator" stdset="0">
+       <bool>false</bool>
+      </property>
       <column>
        <property name="text">
         <string>Name</string>
@@ -162,7 +177,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Tome</string>
+        <string>Volume</string>
        </property>
       </column>
       <column>
