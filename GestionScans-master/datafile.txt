@@ -1,4 +1,0 @@
-Fairy Tail;http://mangapedia.fr/project_code/script/image.php?path=ListsManga/FairyTail/MFTeam/Chapitre/[Chapitre]/[Image].png;D:\Documents\Scans\Fairy Tail;57;489;13062016
-Hunter x Hunter;http://mangapedia.fr/project_code/script/image.php?path=ListsManga/HunterxHunter/MFTeam/Chapitre/[Chapitre]/[Image].png;D:\Documents\Scans\Hunter x Hunter;34;357;09062016
-Bleach;http://mangapedia.fr/project_code/script/image.php?path=ListsManga/Bleach/MFTeam/Chapitre/[Chapitre]/[Image].png;D:\Documents\Scans\Bleach;74;677;09062016
-One Piece;http://mangapedia.fr/project_code/script/image.php?path=ListsManga/Bleach/MFTeam/Chapitre/[Chapitre]/[Image].png;D:\Documents\Scans\One Piece;83;828;02062016
