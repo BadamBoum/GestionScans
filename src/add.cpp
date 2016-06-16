@@ -6,15 +6,15 @@ Add::Add(QWidget *parent) :
     ui(new Ui::Add)
 {
     ui->setupUi(this);
+    connect(ui->AddOK, SIGNAL(clicked(bool)), this, SLOT(slotAddOkButton()));
 }
 
 Add::~Add()
 {
-    connect(ui->AddOK, SIGNAL(clicked(bool)), this, SLOT(slotAddOkButton()));
     delete ui;
 }
 
-void MainWindow::slotAddOkButton()
+void Add::slotAddOkButton()
 {
 //    Ajouter une ligne
 }
