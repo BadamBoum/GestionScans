@@ -14,8 +14,6 @@ class Add : public QWidget
 public:
     explicit Add(QWidget *parent = 0);
     ~Add();
-signals:
-    void addNewSerie(QString);
 private slots:
     void slotAddOkButton();
     void slotAddCancelButton();

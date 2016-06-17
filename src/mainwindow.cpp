@@ -1,6 +1,5 @@
 #include <QDebug>
 #include <QFile>
-#include <QDate>
 #include <QTableWidgetItem>
 
 #include "mainwindow.h"
@@ -19,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
    {
       ui->Tab1TextScreen->append("Database founded");
       QByteArrayList DatafileLine = DatafileContent.split('\n');
+//      QByteArrayList SeriesNames;
       QByteArrayList URLs;
       QByteArrayList Folders;
       QByteArrayList Tome;
@@ -48,6 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE, new QTableWidgetItem(String));
          }
       }
+
+      QTableWidgetItem WidgetName;/*
+      WidgetName.setData(0, SeriesNames.at(0));*/
+      //        ui->Tab2StatusTable->setItem(0,0,WidgetName);
    }
    else
    {
@@ -67,31 +71,17 @@ MainWindow::~MainWindow()
    QFile Datafile("datafile.txt");
    Datafile.open(QIODevice::WriteOnly);
    QTextStream out(&Datafile);
-   QString temp;
 
    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
    {
       for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
       {
-         temp.append( (*ui->Tab2StatusTable->takeItem(i,j)).text() );
+         out << (*ui->Tab2StatusTable->takeItem(i,j)).text();
 
-         if (j < ui->Tab2StatusTable->columnCount() - 1)
-         {
-             temp.append( ";" );
-         }
+         if (j < ui->Tab2StatusTable->columnCount() - 1) out << ";";
       }
-      if (i < ui->Tab2StatusTable->rowCount() - 1)
-      {
-          temp.append( "\n" );
-      }
+      if (i < ui->Tab2StatusTable->rowCount() - 1) out << "\n";
    }
-
-   out << temp;
-
-   out.flush();
-
-   Datafile.flush();
-   Datafile.close();
 
    delete ui;
 }
@@ -101,32 +91,11 @@ void MainWindow::slotTab1AddButton()
    ui->Tab1TextScreen->append("Add");
    Add *AddWindows = new Add;
    AddWindows->show();
-
-   connect(AddWindows, SIGNAL(addNewSerie(QString)), this, SLOT(AddLineStatusTable(QString)));
-}
-
-void MainWindow::AddLineStatusTable(QString NewLine)
-{
-    QStringList ligneSplitee = NewLine.split(';');
-    QString String = ligneSplitee.at(NAME);
-    ui->Tab2StatusTable->insertRow(ui->Tab2StatusTable->rowCount());
-
-    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, NAME, new QTableWidgetItem(String));
-    ui->Tab1SelectedSerie->addItem(ligneSplitee.at(0));
-
-    String = ligneSplitee.at(URL);
-    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, URL, new QTableWidgetItem(String));
-    String = ligneSplitee.at(FOLDER);
-    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, FOLDER, new QTableWidgetItem(String));
-    String = ligneSplitee.at(VOLUME);
-    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, VOLUME, new QTableWidgetItem(String));
-    String = ligneSplitee.at(CHAPTER);
-    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, CHAPTER, new QTableWidgetItem(String));
-    String = ligneSplitee.at(DATE);
-    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE, new QTableWidgetItem(String));
-
-    ui->Tab1TextScreen->append("Series ");
-    ui->Tab1TextScreen->insertPlainText(ligneSplitee.at(NAME));
+   //    Ouvrir boite de dialogue Add
+   //    if (statusReturn == OK)
+   //    {
+   //        ui->Tab1TextScreen->append("New Manga added",ligneSplitee.at(4));
+   //    }
 }
 
 void MainWindow::slotTab1Setting()
