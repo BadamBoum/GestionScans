@@ -16,6 +16,7 @@ public:
     ~MainWindow();
 private slots:
     void slotTab1AddButton();
+    void AddLineStatusTable(QString NewLine);
     void slotTab1Setting();
     void slotTab1Pdf();
     void slotTab1Search();

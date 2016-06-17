@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>10</y>
       <width>641</width>
-      <height>271</height>
+      <height>261</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -256,7 +256,31 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Database"/>
+    <addaction name="actionExit_Without_Save"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuFichier"/>
   </widget>
+  <action name="actionExit_Without_Save">
+   <property name="text">
+    <string>Exit Without Save</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOpen_Database">
+   <property name="text">
+    <string>Open Database</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
