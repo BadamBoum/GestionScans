@@ -1,10 +1,13 @@
 #include <QDebug>
 #include <QFile>
+#include <QDate>
 #include <QTableWidgetItem>
+#include <QtNetwork>
 
 #include "mainwindow.h"
-#include "add.h"
 #include "ui_mainwindow.h"
+#include "add.h"
+#include "setting.h"
 
 MainWindow::MainWindow(QWidget *parent) :
    QMainWindow(parent),
@@ -14,16 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
    QFile Datafile("datafile.txt");
    Datafile.open(QIODevice::ReadWrite);
    QByteArray DatafileContent = Datafile.readAll();
+
    if(DatafileContent.isEmpty() == false)
    {
       ui->Tab1TextScreen->append("Database founded");
       QByteArrayList DatafileLine = DatafileContent.split('\n');
-//      QByteArrayList SeriesNames;
-      QByteArrayList URLs;
-      QByteArrayList Folders;
-      QByteArrayList Tome;
-      QByteArrayList Chapter;
-      QByteArrayList Date;
 
       foreach(QByteArray line, DatafileLine)
       {
@@ -48,15 +46,6 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE, new QTableWidgetItem(String));
          }
       }
-
-      QTableWidgetItem WidgetName;/*
-      WidgetName.setData(0, SeriesNames.at(0));*/
-      //        ui->Tab2StatusTable->setItem(0,0,WidgetName);
-   }
-   else
-   {
-      Add *AddWindows = new Add;
-      AddWindows->show();
    }
 
    connect(ui->Tab1AddButton, SIGNAL(clicked(bool)), this, SLOT(slotTab1AddButton()));
@@ -71,41 +60,93 @@ MainWindow::~MainWindow()
    QFile Datafile("datafile.txt");
    Datafile.open(QIODevice::WriteOnly);
    QTextStream out(&Datafile);
+   QString temp;
 
    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
    {
       for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
       {
-         out << (*ui->Tab2StatusTable->takeItem(i,j)).text();
+         temp.append( (*ui->Tab2StatusTable->takeItem(i,j)).text() );
 
-         if (j < ui->Tab2StatusTable->columnCount() - 1) out << ";";
+         if (j < ui->Tab2StatusTable->columnCount() - 1)
+         {
+             temp.append( ";" );
+         }
       }
-      if (i < ui->Tab2StatusTable->rowCount() - 1) out << "\n";
+      if (i < ui->Tab2StatusTable->rowCount() - 1)
+      {
+          temp.append( "\n" );
+      }
    }
+
+   out << temp;
+   out.flush();
+   Datafile.flush();
+   Datafile.close();
 
    delete ui;
 }
 
 void MainWindow::slotTab1AddButton()
 {
-   ui->Tab1TextScreen->append("Add");
    Add *AddWindows = new Add;
    AddWindows->show();
-   //    Ouvrir boite de dialogue Add
-   //    if (statusReturn == OK)
-   //    {
-   //        ui->Tab1TextScreen->append("New Manga added",ligneSplitee.at(4));
-   //    }
+
+   connect(AddWindows, SIGNAL(addNewSerie(QStringList)), this, SLOT(AddLineStatusTable(QStringList)));
+}
+
+void MainWindow::AddLineStatusTable(QStringList NewLine)
+{
+    ui->Tab1SelectedSerie->addItem(NewLine.at(NAME));
+
+    ui->Tab2StatusTable->insertRow(ui->Tab2StatusTable->rowCount());
+
+    ModifyStatusTable(NewLine);
+
+    ui->Tab1TextScreen->append("Series ");
+    ui->Tab1TextScreen->insertPlainText(NewLine.at(NAME));
+    ui->Tab1TextScreen->insertPlainText(" added");
 }
 
 void MainWindow::slotTab1Setting()
 {
-   ui->Tab1TextScreen->append("Setting");
+   Setting *SettingWindows = new Setting;
+
+   connect(this, SIGNAL(SeriesInfo(QStringList)), SettingWindows, SLOT(FillWindow(QStringList)));
+   emit SeriesInfo(GetLineInfos(ui->Tab1SelectedSerie->currentIndex()));
+
+   SettingWindows->show();
+
+   connect(SettingWindows, SIGNAL(ModifySerie(QStringList)), this, SLOT(ModifyStatusTable(QStringList)));
+}
+
+QStringList MainWindow::GetLineInfos(int Idx)
+{
+   QStringList StringRet;
+
+   StringRet.insert(NAME,    ui->Tab2StatusTable->takeItem(Idx, NAME)->text());
+   StringRet.insert(CHAPTER, ui->Tab2StatusTable->takeItem(Idx, CHAPTER)->text());
+   StringRet.insert(DATE,    ui->Tab2StatusTable->takeItem(Idx, DATE)->text());
+   StringRet.insert(VOLUME,  ui->Tab2StatusTable->takeItem(Idx, VOLUME)->text());
+   StringRet.insert(URL,     ui->Tab2StatusTable->takeItem(Idx, URL)->text());
+   StringRet.insert(FOLDER,  ui->Tab2StatusTable->takeItem(Idx, FOLDER)->text());
+
+   return StringRet;
+}
+
+void MainWindow::ModifyStatusTable(QStringList NewLine)
+{
+    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, NAME,    new QTableWidgetItem(NewLine.at(NAME)));
+    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, CHAPTER, new QTableWidgetItem(NewLine.at(CHAPTER)));
+    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE,    new QTableWidgetItem(NewLine.at(DATE)));
+    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, VOLUME,  new QTableWidgetItem(NewLine.at(VOLUME)));
+    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)));
+    ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, URL,     new QTableWidgetItem(NewLine.at(URL)));
 }
 
 void MainWindow::slotTab1Delete()
 {
-   ui->Tab1TextScreen->append("");
+   ui->Tab1TextScreen->append("Series ");
    ui->Tab1TextScreen->insertPlainText(ui->Tab1SelectedSerie->currentText());
    ui->Tab1TextScreen->insertPlainText(" deleted");
    ui->Tab2StatusTable->removeRow(ui->Tab1SelectedSerie->currentIndex());
@@ -128,24 +169,83 @@ void MainWindow::slotTab1Pdf()
 
 void MainWindow::slotTab1Search()
 {
-   //    foreach(QByteArray ligne, listeDesLignes)
-   //    {
-   //        ui->Tab1TextScreen->append("Search",ligne);
-   //        if (exist(URL(chapter+1,1)))
-   //        {
-   //            ligneSplitee.at(4)++;
-   //            ligneSplitee.at(5) = CurrentDate;
-   //            WriteFile();
-   //            ui->Tab1TextScreen->append("New Chapter found",ligneSplitee.at(4));
-   //            for (index=1;index<25;index++)
-   //            {
-   //                if (exist(URL(ligneSplitee.at(4),index)))
-   //                {
-   //                    ui->Tab1TextScreen->append("Save image",ligne);
-   //                    SaveURL("folder"\chapter\[chapter]_[index].[3LastCharOfURL]);
-   //                }
-   //            }
-   //        }
-   //    }
+   QString TextDirectory;
+   QString TextChapter;
+   QString TextUrlSrc;
+   QString TextUrl;
+   long NumChapter;
+
+//   for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
+//   {
+      TextUrlSrc    = ui->Tab2StatusTable->takeItem(0,URL)->text();
+      TextDirectory = ui->Tab2StatusTable->takeItem(0,FOLDER)->text();
+      TextChapter   = ui->Tab2StatusTable->takeItem(0,CHAPTER)->text();
+      NumChapter    = TextChapter.toLong();
+      NumChapter++;
+      TextChapter.setNum(NumChapter);
+
+      TextUrlSrc.replace("[Chapter]", TextChapter);
+      TextUrl = TextUrlSrc;
+      TextUrl.replace("[Image]","01");
+
+      erreurTrouvee = false;
+
+      QUrl url = QUrl(TextUrl); //On récupère l'URL
+      QNetworkRequest requete(url); //On crée notre requête
+      QNetworkAccessManager *m = new QNetworkAccessManager; //On crée le QNetworkAccessManager qui va traiter la requête
+      /*Ensuite, on utilise la méthode get() pour télécharger le contenu de notre requête.
+      On récupère un pointeur de QNetworkReply.*/
+      QNetworkReply *r = m->get(requete);
+
+      connect(r, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(messageErreur(QNetworkReply::NetworkError)));
+      connect(r, SIGNAL(finished()), this, SLOT(enregistrer()));
+
+//      if(TempUrl.isValid())
+//      {
+//         for(int j = 1; j < 25; j++)
+//         {
+//            TextUrl = TextUrlSrc;
+//            if (j < 10)
+//            {
+//               TextUrl.replace("[Image]","0[Image]");
+//            }
+//            TextUrl.replace("[Image]",Text.setNum(j));
+//         }
+//         ui->Tab1TextScreen->append("Series ");
+//         ui->Tab1TextScreen->insertPlainText(ui->Tab1SelectedSerie->currentText());
+//         ui->Tab1TextScreen->insertPlainText(" downloaded");
+//         ui->Tab2StatusTable->setItem(i, CHAPTER, new QTableWidgetItem(TextChapter));
+//      }
+//   }
 }
 
+void MainWindow::messageErreur(QNetworkReply::NetworkError)
+{
+    erreurTrouvee = true; //On indique qu'il y a eu une erreur au slot enregistrer
+    QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
+    ui->Tab1TextScreen->append(r->errorString());
+}
+
+void MainWindow::enregistrer()
+{
+   //On vérifie qu'il n'y a pas eu d'erreur.
+   if(!erreurTrouvee)
+   {
+      QNetworkReply *r = qobject_cast<QNetworkReply*>(sender()); //On récupère la réponse du serveur
+      QFile f("reponse.txt"); //On ouvre le fichier
+
+      if ( f.open(QIODevice::WriteOnly) )
+      {
+         f.write(r->readAll()); ////On lit la réponse du serveur que l'on met dans un fichier
+         f.close(); //On ferme le fichier
+         r->deleteLater(); //IMPORTANT : on emploie la fonction deleteLater() pour supprimer la réponse du serveur.
+         //Si vous ne le faites pas, vous risquez des fuites de mémoire ou autre.
+      }
+   }
+}
+
+void MainWindow::loadImage()
+{
+ QPixmap buttonImage;
+// buttonImage.loadFromData(m_pImgCtrl->downloadedData());
+}

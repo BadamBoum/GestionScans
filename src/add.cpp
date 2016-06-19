@@ -1,5 +1,7 @@
+#include <QDate>
 #include "add.h"
 #include "ui_add.h"
+#include "mainwindow.h"
 
 Add::Add(QWidget *parent) :
     QWidget(parent),
@@ -17,18 +19,32 @@ Add::~Add()
 
 void Add::slotAddOkButton()
 {
-   QString String = ui->TextSeriesName->text();
-//   ui->Tab2StatusTable->insertRow(ui->Tab2StatusTable->rowCount());
-//   ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, NAME, new QTableWidgetItem(String));
-   String = ui->TextURL->text();
-//   ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, URL, new QTableWidgetItem(String));
-   String = ui->TextFolder->text();
-   if(ui->AddCreateFolder->checkState() == 2) ;
-//   ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, FOLDER, new QTableWidgetItem(String));
-//   String = ui->VolumeValue->value();
-//   ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, VOLUME, new QTableWidgetItem(String));
-//   ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, CHAPTER, new QTableWidgetItem(String));
-//   ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE, new QTableWidgetItem(String));
+   QStringList String;
+   QString temp;
+   String.insert(NAME,    ui->TextSeriesName->text());
+   String.insert(CHAPTER, ui->ChapterValue->cleanText());
+   String.insert(DATE,    QDate::currentDate().toString("dd.MM.yyyy"));
+   String.insert(VOLUME,  ui->VolumeValue->cleanText());
+   String.insert(URL,     ui->TextURL->text());
+
+   if(ui->AddCreateFolder->checkState() == 2)
+   {
+      temp.append(ui->TextFolder->text());
+      if (temp.right(1) != "\\")
+      {
+         temp.append("\\");
+      }
+      temp.append(ui->TextSeriesName->text());
+      String.insert(FOLDER, temp);
+   }
+   else
+   {
+      String.insert(FOLDER,  ui->TextFolder->text());
+   }
+
+   emit addNewSerie(String);
+
+   this->close();
 }
 
 void Add::slotAddCancelButton()

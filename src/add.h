@@ -14,9 +14,14 @@ class Add : public QWidget
 public:
     explicit Add(QWidget *parent = 0);
     ~Add();
+
+signals:
+    void addNewSerie(QStringList);
+
 private slots:
     void slotAddOkButton();
     void slotAddCancelButton();
+
 private:
     Ui::Add *ui;
 };

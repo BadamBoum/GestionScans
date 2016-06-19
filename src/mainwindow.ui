@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>639</width>
-    <height>333</height>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>641</width>
-      <height>271</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -33,14 +33,14 @@
      <widget class="QPushButton" name="Tab1AddButton">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>10</y>
-        <width>75</width>
+        <x>340</x>
+        <y>20</y>
+        <width>121</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>Add</string>
+       <string>Add New Series</string>
       </property>
      </widget>
      <widget class="QComboBox" name="Tab1SelectedSerie">
@@ -63,9 +63,9 @@
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>42</y>
+        <y>20</y>
         <width>121</width>
-        <height>51</height>
+        <height>61</height>
        </rect>
       </property>
       <property name="text">
@@ -75,7 +75,7 @@
      <widget class="QPushButton" name="Tab1Setting">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>190</x>
         <y>40</y>
         <width>75</width>
         <height>23</height>
@@ -89,7 +89,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
+        <y>40</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -104,18 +104,18 @@
         <x>10</x>
         <y>100</y>
         <width>611</width>
-        <height>141</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="Tab1Search_2">
+     <widget class="QPushButton" name="Tab1SearchOne">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>40</y>
+        <x>190</x>
+        <y>70</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -128,13 +128,52 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>70</y>
+        <y>40</y>
         <width>75</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Tab1SpecificFolder">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>10</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Folder</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Tab1GeneralFolder">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>60</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>General Folder</string>
+      </property>
+     </widget>
+     <widget class="Line" name="line">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>10</y>
+        <width>20</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </widget>
@@ -148,7 +187,7 @@
         <x>10</x>
         <y>10</y>
         <width>611</width>
-        <height>221</height>
+        <height>241</height>
        </rect>
       </property>
       <property name="editTriggers">
@@ -189,6 +228,11 @@
        <property name="text">
         <string>URL</string>
        </property>
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
       </column>
      </widget>
     </widget>
@@ -201,19 +245,19 @@
        <rect>
         <x>30</x>
         <y>30</y>
-        <width>81</width>
+        <width>131</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Auto-search</string>
+       <string>Auto-search at Start</string>
       </property>
      </widget>
      <widget class="QPushButton" name="ParamSave">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>210</y>
+        <x>510</x>
+        <y>220</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -226,13 +270,36 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>60</y>
-        <width>101</width>
+        <y>80</y>
+        <width>171</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Delete after PDF</string>
+       <string>Delete Scan after Manual PDF</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Tab3WeeklyFolderText">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>140</y>
+        <width>251</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>140</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Weekly PDF Folder</string>
       </property>
      </widget>
     </widget>
@@ -256,7 +323,31 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Database"/>
+    <addaction name="actionExit_Without_Save"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuFichier"/>
   </widget>
+  <action name="actionExit_Without_Save">
+   <property name="text">
+    <string>Exit Without Save</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOpen_Database">
+   <property name="text">
+    <string>Open Database</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

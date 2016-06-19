@@ -99,7 +99,7 @@
   <widget class="QPushButton" name="AddOK">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>350</x>
      <y>270</y>
      <width>75</width>
      <height>23</height>
@@ -167,7 +167,20 @@
     </rect>
    </property>
    <property name="text">
-    <string>Create Series folder</string>
+    <string>Add Name Folder</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="BoxWeeklyPDF">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>220</y>
+     <width>81</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Weekly PDF</string>
    </property>
   </widget>
  </widget>
