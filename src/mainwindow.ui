@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
+    <width>632</width>
     <height>412</height>
    </rect>
   </property>
@@ -19,12 +19,12 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>711</width>
+      <width>621</width>
       <height>361</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -33,7 +33,7 @@
      <widget class="QPushButton" name="Tab1AddButton">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>330</x>
         <y>20</y>
         <width>121</width>
         <height>23</height>
@@ -62,7 +62,7 @@
      <widget class="QPushButton" name="Tab1Search">
       <property name="geometry">
        <rect>
-        <x>530</x>
+        <x>480</x>
         <y>20</y>
         <width>121</width>
         <height>61</height>
@@ -86,6 +86,9 @@
       </property>
      </widget>
      <widget class="QPushButton" name="Tab1PDF">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -103,7 +106,7 @@
        <rect>
         <x>10</x>
         <y>110</y>
-        <width>681</width>
+        <width>591</width>
         <height>211</height>
        </rect>
       </property>
@@ -153,7 +156,7 @@
      <widget class="QPushButton" name="Tab1OpenFolder">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>330</x>
         <y>60</y>
         <width>121</width>
         <height>21</height>
@@ -166,7 +169,7 @@
      <widget class="Line" name="line">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>290</x>
         <y>10</y>
         <width>20</width>
         <height>91</height>
@@ -186,7 +189,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>681</width>
+        <width>611</width>
         <height>301</height>
        </rect>
       </property>
@@ -234,6 +237,11 @@
         </font>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>Digits</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -276,7 +284,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>180</y>
+        <y>200</y>
         <width>251</width>
         <height>20</height>
        </rect>
@@ -285,7 +293,7 @@
      <widget class="QLabel" name="labelScanFolder">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>30</x>
         <y>180</y>
         <width>101</width>
         <height>16</height>
@@ -325,7 +333,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>715</width>
+     <width>632</width>
      <height>21</height>
     </rect>
    </property>

@@ -12,6 +12,7 @@ void SeriesBox::SetSeries(QStringList Datas)
    ChapterVal   = Datas.at(CHAPTER);
    SeriesFolder = Datas.at(FOLDER);
    SeriesURL    = Datas.at(URL);
+   NbOfDigit    = Datas.at(DIGIT);
    ImageVal     = 1;
 }
 
@@ -37,6 +38,11 @@ QString SeriesBox::GetSeriesName()
 QString SeriesBox::GetChapter()
 {
    return ChapterVal;
+}
+
+QString SeriesBox::GetNbDigit()
+{
+   return NbOfDigit;
 }
 
 QString SeriesBox::GetSeriesFolder()
@@ -105,7 +111,16 @@ QString SeriesBox::GetURL()
    QString convertion;
 
    convertion.setNum(ImageVal);
+
    if (ImageVal < 10)
+   {
+      convertion.push_front("0");
+   }
+   if ((ImageVal < 100) && (NbOfDigit.toInt() == 3))
+   {
+      convertion.push_front("0");
+   }
+   if ((ImageVal < 1000) && (NbOfDigit.toInt() == 4))
    {
       convertion.push_front("0");
    }

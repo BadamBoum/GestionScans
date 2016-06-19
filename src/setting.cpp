@@ -23,6 +23,7 @@ void Setting::FillWindow(QStringList Datas, int Index)
    ui->TextURL->setText(Datas.at(URL));
    ui->VolumeValue->setValue(Datas.at(VOLUME).toInt());
    ui->ChapterValue->setValue(Datas.at(CHAPTER).toInt());
+   ui->DigitValue->setValue(Datas.at(DIGIT).toInt());
    CurrentIdx = Index;
 }
 
@@ -35,6 +36,7 @@ void Setting::slotOkButton()
    String.insert(VOLUME,  ui->VolumeValue->cleanText());
    String.insert(URL,     ui->TextURL->text());
    String.insert(FOLDER,  "");
+   String.insert(DIGIT,   ui->DigitValue->cleanText());
 
    emit ModifySerie(String, CurrentIdx);
 

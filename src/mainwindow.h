@@ -7,7 +7,7 @@
 
 enum Column
 {
-   NAME, CHAPTER, DATE, VOLUME, FOLDER, URL
+   NAME, CHAPTER, DATE, VOLUME, FOLDER, URL, DIGIT
 };
 
 namespace Ui {

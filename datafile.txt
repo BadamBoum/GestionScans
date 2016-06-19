@@ -1,5 +1,6 @@
 D:\Documents\Scans
-Fairy Tail;488;13.06.2016;57;D:\Documents\Scans\Fairy Tail;http://www.lirescan.com/images/lecture-en-ligne/fairy-tail/[Chapter]/[Image].jpg
-Hunter x Hunter;357;09.06.2016;34;D:\Documents\Scans\Hunter x Hunter;http://www.lirescan.com/images/lecture-en-ligne/hunter-x-hunter/[Chapter]/[Image].jpg
-Bleach;677;09.06.2016;74;D:\Documents\Scans\Bleach;http://www.lirescan.com/images/lecture-en-ligne/bleach/[Chapter]/[Image].jpg
-One Piece;828;02.06.2016;83;D:\Documents\Scans\One Piece;http://www.lirescan.com/images/lecture-en-ligne/one-piece/[Chapter]/[Image].jpg
+Fairy Tail;489;13.06.2016;57;D:\Documents\Scans\Fairy Tail;http://www.lirescan.com/images/lecture-en-ligne/fairy-tail/[Chapter]/[Image].jpg;2
+Hunter x Hunter;357;09.06.2016;34;D:\Documents\Scans\Hunter x Hunter;http://www.lirescan.com/images/lecture-en-ligne/hunter-x-hunter/[Chapter]/[Image].jpg;2
+Bleach;677;09.06.2016;74;D:\Documents\Scans\Bleach;http://www.lirescan.com/images/lecture-en-ligne/bleach/[Chapter]/[Image].jpg;2
+One Piece;828;02.06.2016;83;D:\Documents\Scans\One Piece;http://www.lirescan.com/images/lecture-en-ligne/one-piece/[Chapter]/[Image].jpg;2
+Attaque des Titans;75;19.06.2016;15;D:\Documents\Scans\Attaque des Titans;http://www.lirescan.com/images/lecture-en-ligne/shingeki-no-kyojin/[Chapter]/[Image].jpg;2

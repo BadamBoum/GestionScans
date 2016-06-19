@@ -56,8 +56,9 @@ MainWindow::MainWindow(QWidget *parent) :
                ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, CHAPTER, new QTableWidgetItem(String));
                String = ligneSplitee.at(DATE);
                ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE, new QTableWidgetItem(String));
+               String = ligneSplitee.at(DIGIT);
+               ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DIGIT, new QTableWidgetItem(String));
             }
-
          }
       }
    }
@@ -136,6 +137,9 @@ void MainWindow::AddLineStatusTable(QStringList NewLine)
 
     ui->Tab2StatusTable->insertRow(ui->Tab2StatusTable->rowCount());
 
+    NewLine.removeAt(FOLDER);
+    NewLine.insert(FOLDER, GeneralFolder + "\\" + NewLine.at(NAME));
+
     ModifyStatusTable(NewLine, ui->Tab2StatusTable->rowCount() - 1);
 
     ui->Tab1TextScreen->append("Series ");
@@ -165,6 +169,7 @@ QStringList MainWindow::GetLineInfos(int Idx)
    StringRet.insert(VOLUME,  ui->Tab2StatusTable->item(Idx, VOLUME)->text());
    StringRet.insert(URL,     ui->Tab2StatusTable->item(Idx, URL)->text());
    StringRet.insert(FOLDER,  GeneralFolder);
+   StringRet.insert(DIGIT,   ui->Tab2StatusTable->item(Idx, DIGIT)->text());
 
    return StringRet;
 }
@@ -173,10 +178,11 @@ void MainWindow::ModifyStatusTable(QStringList NewLine, int Index)
 {
     ui->Tab2StatusTable->setItem(Index, NAME,    new QTableWidgetItem(NewLine.at(NAME)));
     ui->Tab2StatusTable->setItem(Index, CHAPTER, new QTableWidgetItem(NewLine.at(CHAPTER)));
-//    ui->Tab2StatusTable->setItem(Index, DATE,    new QTableWidgetItem(NewLine.at(DATE)));
+    ui->Tab2StatusTable->setItem(Index, DATE,    new QTableWidgetItem(NewLine.at(DATE)));
     ui->Tab2StatusTable->setItem(Index, VOLUME,  new QTableWidgetItem(NewLine.at(VOLUME)));
-//    ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)));
+    ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)));
     ui->Tab2StatusTable->setItem(Index, URL,     new QTableWidgetItem(NewLine.at(URL)));
+    ui->Tab2StatusTable->setItem(Index, DIGIT,   new QTableWidgetItem(NewLine.at(DIGIT)));
 }
 
 void MainWindow::slotTab1Delete()
@@ -323,7 +329,7 @@ void MainWindow::downloadNextImage(bool lastStatus)
 {
    CurrentSerie.UpdateImageVal();
 
-   if (  ((CurrentSerie.GetImageVal() < 25) && (lastStatus == true))
+   if (  ((CurrentSerie.GetImageVal() < 100) && (lastStatus == true))
       || (CurrentSerie.GetImageVal() < 5))
    {
       TestUrl(CurrentSerie.GetURL());

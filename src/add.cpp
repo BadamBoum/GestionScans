@@ -26,8 +26,8 @@ void Add::slotAddOkButton()
    String.insert(DATE,    QDate::currentDate().toString("dd.MM.yyyy"));
    String.insert(VOLUME,  ui->VolumeValue->cleanText());
    String.insert(URL,     ui->TextURL->text());
-
    String.insert(FOLDER,  "");
+   String.insert(DIGIT,   ui->DigitValue->cleanText());
 
    emit addNewSerie(String);
 
