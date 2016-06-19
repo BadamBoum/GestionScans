@@ -48,7 +48,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>161</width>
+        <width>164</width>
         <height>20</height>
        </rect>
       </property>
@@ -104,7 +104,7 @@
         <x>10</x>
         <y>110</y>
         <width>681</width>
-        <height>201</height>
+        <height>211</height>
        </rect>
       </property>
       <property name="readOnly">
@@ -150,7 +150,7 @@
        <string>Folder</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="Tab1GeneralFolder">
+     <widget class="QPushButton" name="Tab1OpenFolder">
       <property name="geometry">
        <rect>
         <x>380</x>
@@ -160,7 +160,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>General Folder</string>
+       <string>Open Scans Folder</string>
       </property>
      </widget>
      <widget class="Line" name="line">
@@ -241,6 +241,9 @@
       <string>Parameters</string>
      </attribute>
      <widget class="QCheckBox" name="ParamAutoSearch">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -254,6 +257,9 @@
       </property>
      </widget>
      <widget class="QCheckBox" name="ParamDelete">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>30</x>

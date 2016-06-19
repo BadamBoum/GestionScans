@@ -27,11 +27,15 @@ signals:
 
 private slots:
     void slotTab1AddButton();
+    void slotTab1OpenFolder();
+    void slotTab1OpenSeriesFolder();
     void AddLineStatusTable(QStringList NewLine);
     void ModifyStatusTable(QStringList NewLine, int Index);
+    void TestUrl(QUrl url);
     void slotTab1Setting();
     void slotTab1Pdf();
     void slotTab1Search();
+    void slotTab1SearchOne();
     void slotTab1Delete();
     void messageErreur(QNetworkReply::NetworkError);
     void enregistrer();
@@ -44,6 +48,7 @@ private:
     SeriesBox CurrentSerie;
     QString GeneralFolder;
     int DownloadSeriesIdx = 0;
+    int NumberOfSeriesSearch = 0;
 };
 
 #endif // MAINWINDOW_H

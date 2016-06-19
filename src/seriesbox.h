@@ -12,8 +12,12 @@ public:
    void    UpdateChapterVal();
    QString GetSeriesName();
    QString GetChapter();
+   QString GetSeriesFolder();
+   QString GetChapterFolder();
    QString GetImgFolder();
    QString GetURL();
+   QString GetURLjpg();
+   QString GetURLpng();
    int     GetImageVal();
 
 private:

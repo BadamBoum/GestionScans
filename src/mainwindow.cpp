@@ -1,8 +1,10 @@
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QDate>
 #include <QTableWidgetItem>
 #include <QtNetwork>
+#include <QProcess>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -65,14 +67,20 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1Pdf()));
    connect(ui->Tab1Search, SIGNAL(clicked(bool)), this, SLOT(slotTab1Search()));
    connect(ui->Tab1Delete, SIGNAL(clicked(bool)), this, SLOT(slotTab1Delete()));
+   connect(ui->Tab1SearchOne, SIGNAL(clicked(bool)), this, SLOT(slotTab1SearchOne()));
+   connect(ui->Tab1OpenFolder, SIGNAL(clicked(bool)), this, SLOT(slotTab1OpenFolder()));
+   connect(ui->Tab1SpecificFolder, SIGNAL(clicked(bool)), this, SLOT(slotTab1OpenSeriesFolder()));
 }
 
 MainWindow::~MainWindow()
 {
-   QFile Datafile("datafile.txt");
+   QFile Datafile("datafile_out.txt");
    Datafile.open(QIODevice::WriteOnly);
    QTextStream out(&Datafile);
    QString temp;
+
+   temp.append(ui->Tab3ScanFolderText->text());
+   temp.append( "\n" );
 
    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
    {
@@ -105,6 +113,21 @@ void MainWindow::slotTab1AddButton()
    AddWindows->show();
 
    connect(AddWindows, SIGNAL(addNewSerie(QStringList)), this, SLOT(AddLineStatusTable(QStringList)));
+}
+
+void MainWindow::slotTab1OpenFolder()
+{
+   QProcess::startDetached("explorer.exe", QStringList() << "/e,/root,"+ui->Tab3ScanFolderText->text());
+}
+
+void MainWindow::slotTab1OpenSeriesFolder()
+{
+   QString folder = "/e,/root,";
+   CurrentSerie.SetSeries(GetLineInfos(ui->Tab1SelectedSerie->currentIndex()));
+   folder += " \"";
+   folder += CurrentSerie.GetSeriesFolder();
+   folder += "\"";
+   QProcess::startDetached("explorer.exe", QStringList() << folder);
 }
 
 void MainWindow::AddLineStatusTable(QStringList NewLine)
@@ -182,14 +205,33 @@ void MainWindow::slotTab1Pdf()
 void MainWindow::slotTab1Search()
 {
    ui->Tab1TextScreen->append("");
-   ui->Tab1TextScreen->append("***Search Start***");
-   DownloadSeriesIdx = 0;
+   ui->Tab1TextScreen->append("***Global Search Start***");
+
+   DownloadSeriesIdx    = 0;
+   NumberOfSeriesSearch = ui->Tab2StatusTable->rowCount();
    CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
    CurrentSerie.UpdateChapterVal();
 
+   TestUrl(CurrentSerie.GetURL());
+}
+
+void MainWindow::slotTab1SearchOne()
+{
+   ui->Tab1TextScreen->append("");
+   ui->Tab1TextScreen->append("***Search Start***");
+
+   DownloadSeriesIdx    = ui->Tab1SelectedSerie->currentIndex();
+   NumberOfSeriesSearch = 1;
+   CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
+   CurrentSerie.UpdateChapterVal();
+
+   TestUrl(CurrentSerie.GetURL());
+}
+
+void MainWindow::TestUrl(QUrl url)
+{
    erreurTrouvee = false;
 
-   QUrl url = QUrl(CurrentSerie.GetURL());
    QNetworkRequest requete(url);
    QNetworkAccessManager *m = new QNetworkAccessManager;
    QNetworkReply *r = m->get(requete);
@@ -197,7 +239,7 @@ void MainWindow::slotTab1Search()
    if(ui->DebugBox->isChecked())
    {
       ui->Tab1TextScreen->append("URL tested :");
-      ui->Tab1TextScreen->append(CurrentSerie.GetURL());
+//      ui->Tab1TextScreen->append(url);
    }
 
    connect(r, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(messageErreur(QNetworkReply::NetworkError)));
@@ -234,8 +276,24 @@ void MainWindow::enregistrer()
    if(!erreurTrouvee)
    {
       QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
-      QFile f(CurrentSerie.GetImgFolder());
 
+      if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
+      {
+         ui->Tab1TextScreen->append("");
+         ui->Tab1TextScreen->append("CreateFolder :");
+         ui->Tab1TextScreen->append(CurrentSerie.GetSeriesFolder());
+         QDir().mkdir(CurrentSerie.GetSeriesFolder());
+      }
+
+      if(QDir(CurrentSerie.GetChapterFolder()).exists() == false)
+      {
+         ui->Tab1TextScreen->append("");
+         ui->Tab1TextScreen->append("CreateFolder :");
+         ui->Tab1TextScreen->append(CurrentSerie.GetChapterFolder());
+         QDir().mkdir(CurrentSerie.GetChapterFolder());
+      }
+
+      QFile f(CurrentSerie.GetImgFolder());
 
       if (f.open(QIODevice::WriteOnly))
       {
@@ -265,45 +323,35 @@ void MainWindow::downloadNextImage(bool lastStatus)
 {
    CurrentSerie.UpdateImageVal();
 
-   if ((CurrentSerie.GetImageVal() < 25) && (lastStatus == true))
+   if (  ((CurrentSerie.GetImageVal() < 25) && (lastStatus == true))
+      || (CurrentSerie.GetImageVal() < 5))
    {
-      QUrl url = QUrl(CurrentSerie.GetURL());
-      QNetworkRequest requete(url);
-      QNetworkAccessManager *m = new QNetworkAccessManager;
-      QNetworkReply *r = m->get(requete);
-
-      if(ui->DebugBox->isChecked())
-      {
-         ui->Tab1TextScreen->append("URL tested :");
-         ui->Tab1TextScreen->append(CurrentSerie.GetURL());
-      }
-
-      connect(r, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(messageErreur(QNetworkReply::NetworkError)));
-      connect(r, SIGNAL(finished()), this, SLOT(enregistrer()));
+      TestUrl(CurrentSerie.GetURL());
    }
    else
    {
-      if (DownloadSeriesIdx < ui->Tab2StatusTable->lineWidth())
+      if(QDir(CurrentSerie.GetChapterFolder()).exists() == true)
       {
-         DownloadSeriesIdx++;
+         //ajouter un chapitre
+         long chapterValue = ui->Tab2StatusTable->item(DownloadSeriesIdx, CHAPTER)->text().toLong();
+         chapterValue++;
+         QString ChapterTxt;
+         ChapterTxt.setNum(chapterValue);
+         ui->Tab2StatusTable->setItem(DownloadSeriesIdx, CHAPTER, new QTableWidgetItem(ChapterTxt));
+      }
+
+      DownloadSeriesIdx++;
+      if (DownloadSeriesIdx < NumberOfSeriesSearch)
+      {
          CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
          CurrentSerie.UpdateChapterVal();
 
-         erreurTrouvee = false;
-
-         QUrl url = QUrl(CurrentSerie.GetURL());
-         QNetworkRequest requete(url);
-         QNetworkAccessManager *m = new QNetworkAccessManager;
-         QNetworkReply *r = m->get(requete);
-
-         if(ui->DebugBox->isChecked())
-         {
-            ui->Tab1TextScreen->append("URL tested :");
-            ui->Tab1TextScreen->append(CurrentSerie.GetURL());
-         }
-
-         connect(r, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(messageErreur(QNetworkReply::NetworkError)));
-         connect(r, SIGNAL(finished()), this, SLOT(enregistrer()));
+         TestUrl(CurrentSerie.GetURL());
+      }
+      else
+      {
+         ui->Tab1TextScreen->append("");
+         ui->Tab1TextScreen->append("***Search ended***");
       }
    }
 }
