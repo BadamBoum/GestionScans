@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     add.cpp \
-    setting.cpp
+    setting.cpp \
+    seriesbox.cpp
 
 HEADERS  += mainwindow.h \
     add.h \
-    setting.h
+    setting.h \
+    seriesbox.h
 
 FORMS    += mainwindow.ui \
     add.ui \

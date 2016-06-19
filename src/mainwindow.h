@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "qnetworkreply.h"
+#include "seriesbox.h"
 
 enum Column
 {
@@ -22,24 +23,27 @@ public:
     ~MainWindow();
 
 signals:
-    void SeriesInfo(QStringList);
+    void SeriesInfo(QStringList, int);
 
 private slots:
     void slotTab1AddButton();
     void AddLineStatusTable(QStringList NewLine);
-    void ModifyStatusTable(QStringList NewLine);
+    void ModifyStatusTable(QStringList NewLine, int Index);
     void slotTab1Setting();
     void slotTab1Pdf();
     void slotTab1Search();
     void slotTab1Delete();
-    void loadImage();
-    QStringList GetLineInfos(int Idx);
     void messageErreur(QNetworkReply::NetworkError);
     void enregistrer();
+    void downloadNextImage(bool lastStatus);
+    QStringList GetLineInfos(int Idx);
 
 private:
     Ui::MainWindow *ui;
     bool erreurTrouvee = false;
+    SeriesBox CurrentSerie;
+    QString GeneralFolder;
+    int DownloadSeriesIdx = 0;
 };
 
 #endif // MAINWINDOW_H

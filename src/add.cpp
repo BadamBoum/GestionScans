@@ -27,20 +27,7 @@ void Add::slotAddOkButton()
    String.insert(VOLUME,  ui->VolumeValue->cleanText());
    String.insert(URL,     ui->TextURL->text());
 
-   if(ui->AddCreateFolder->checkState() == 2)
-   {
-      temp.append(ui->TextFolder->text());
-      if (temp.right(1) != "\\")
-      {
-         temp.append("\\");
-      }
-      temp.append(ui->TextSeriesName->text());
-      String.insert(FOLDER, temp);
-   }
-   else
-   {
-      String.insert(FOLDER,  ui->TextFolder->text());
-   }
+   String.insert(FOLDER,  "");
 
    emit addNewSerie(String);
 

@@ -16,10 +16,10 @@ public:
    ~Setting();
 
 signals:
-    void ModifySerie(QStringList);
+    void ModifySerie(QStringList, int);
 
 public slots:
-    void FillWindow(QStringList Datas);
+    void FillWindow(QStringList Datas, int Index);
 
 private slots:
     void slotOkButton();
@@ -27,6 +27,7 @@ private slots:
 
 private:
    Ui::Setting *ui;
+   int CurrentIdx = 0;
 };
 
 #endif // SETTING_H

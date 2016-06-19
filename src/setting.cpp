@@ -17,26 +17,26 @@ Setting::~Setting()
    delete ui;
 }
 
-void Setting::FillWindow(QStringList Datas)
+void Setting::FillWindow(QStringList Datas, int Index)
 {
    ui->LabelSerie->setText(Datas.at(NAME));
-   ui->TextFolder->setText(Datas.at(FOLDER));
    ui->TextURL->setText(Datas.at(URL));
    ui->VolumeValue->setValue(Datas.at(VOLUME).toInt());
    ui->ChapterValue->setValue(Datas.at(CHAPTER).toInt());
+   CurrentIdx = Index;
 }
 
 void Setting::slotOkButton()
 {
-//   QStringList String;
-//   String.insert(NAME,    ui->TextSeriesName->text());
-//   String.insert(CHAPTER, ui->ChapterValue->cleanText());
-//   String.insert(DATE,    QDate::currentDate().toString("dd.MM.yyyy"));
-//   String.insert(VOLUME,  ui->VolumeValue->cleanText());
-//   String.insert(URL,     ui->TextURL->text());
-//   String.insert(FOLDER,  ui->TextFolder->text());
+   QStringList String;
+   String.insert(NAME,    ui->LabelSerie->text());
+   String.insert(CHAPTER, ui->ChapterValue->cleanText());
+   String.insert(DATE,    "");
+   String.insert(VOLUME,  ui->VolumeValue->cleanText());
+   String.insert(URL,     ui->TextURL->text());
+   String.insert(FOLDER,  "");
 
-//   emit ModifySerie(String);
+   emit ModifySerie(String, CurrentIdx);
 
    this->close();
 }
