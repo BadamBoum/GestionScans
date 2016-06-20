@@ -5,6 +5,7 @@
 #include <QTableWidgetItem>
 #include <QtNetwork>
 #include <QProcess>
+#include <QPrinter>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -71,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(ui->Tab1SearchOne, SIGNAL(clicked(bool)), this, SLOT(slotTab1SearchOne()));
    connect(ui->Tab1OpenFolder, SIGNAL(clicked(bool)), this, SLOT(slotTab1OpenFolder()));
    connect(ui->Tab1SpecificFolder, SIGNAL(clicked(bool)), this, SLOT(slotTab1OpenSeriesFolder()));
+   connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1PrintPdf()));
 }
 
 MainWindow::~MainWindow()
@@ -106,6 +108,57 @@ MainWindow::~MainWindow()
    Datafile.close();
 
    delete ui;
+}
+
+void MainWindow::slotTab1PrintPdf()
+{
+   QPrinter printer;
+   printer.setOutputFormat(QPrinter::PdfFormat);
+   printer.setFullPage(true);
+   printer.setPageSize(QPrinter::A4);
+   printer.setOutputFileName(m_url + m_pdfName);
+   printer.setOrientation(QPrinter::Portrait);
+   printer.setPrinterName(printer.printerName());
+   printer.setResolution(600);
+
+   QPainter paint;
+
+   if(!paint.begin(&printer)) return;
+
+   QMatrix matrix;
+   matrix.rotate(270);
+   QRect rect = paint.viewport();
+
+   for (int i = 0; i < /* count images */; i++)
+   {
+       if(i > 0)
+       {
+           if(!printer.newPage()) return;
+       }
+
+       QString imageFolder = /* QString Folder */;
+
+       if(imageFolder.isEmpty()) continue;
+
+       QImage image(imageFolder);
+       QSize size = image.size();
+
+       if(size.width() > size.height())
+       {
+           image = image.transformed(matrix);
+           size = image.size();
+       }
+
+       size.scale(rect.size(), Qt::KeepAspectRatio);
+       int x = rect.x() + ((rect.size().width() - size.width())/2);
+       int y = rect.y() + ((rect.size().height() - size.height())/2);
+
+       paint.setViewport(x, y, size.width(), size.height());
+       paint.setWindow(image.rect());
+       paint.drawImage(0, 0, image);
+   }
+
+   paint.end();
 }
 
 void MainWindow::slotTab1AddButton()
