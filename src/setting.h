@@ -28,6 +28,8 @@ private slots:
 private:
    Ui::Setting *ui;
    int CurrentIdx = 0;
+   QString Date;
+   QString Folder;
 };
 
 #endif // SETTING_H

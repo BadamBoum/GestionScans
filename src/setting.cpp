@@ -25,6 +25,8 @@ void Setting::FillWindow(QStringList Datas, int Index)
    ui->ChapterValue->setValue(Datas.at(CHAPTER).toInt());
    ui->DigitValue->setValue(Datas.at(DIGIT).toInt());
    CurrentIdx = Index;
+   Date       = Datas.at(DATE);
+   Folder     = Datas.at(FOLDER);
 }
 
 void Setting::slotOkButton()
@@ -32,10 +34,10 @@ void Setting::slotOkButton()
    QStringList String;
    String.insert(NAME,    ui->LabelSerie->text());
    String.insert(CHAPTER, ui->ChapterValue->cleanText());
-   String.insert(DATE,    "");
+   String.insert(DATE,    Date);
    String.insert(VOLUME,  ui->VolumeValue->cleanText());
    String.insert(URL,     ui->TextURL->text());
-   String.insert(FOLDER,  "");
+   String.insert(FOLDER,  Folder);
    String.insert(DIGIT,   ui->DigitValue->cleanText());
 
    emit ModifySerie(String, CurrentIdx);

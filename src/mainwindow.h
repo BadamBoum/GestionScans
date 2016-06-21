@@ -27,13 +27,14 @@ signals:
 
 private slots:
     void slotTab1AddButton();
+    void slotOpenFolder();
     void slotTab1OpenFolder();
-    void slotTab1PrintPdf();
     void slotTab1OpenSeriesFolder();
     void AddLineStatusTable(QStringList NewLine);
     void ModifyStatusTable(QStringList NewLine, int Index);
     void TestUrl(QUrl url);
     void slotTab1Setting();
+    void slotUpdateFolder();
     void slotTab1Pdf();
     void slotTab1Search();
     void slotTab1SearchOne();

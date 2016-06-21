@@ -5,7 +5,7 @@
 #include <QTableWidgetItem>
 #include <QtNetwork>
 #include <QProcess>
-#include <QPrinter>
+#include <QFileDialog>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -72,7 +72,8 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(ui->Tab1SearchOne, SIGNAL(clicked(bool)), this, SLOT(slotTab1SearchOne()));
    connect(ui->Tab1OpenFolder, SIGNAL(clicked(bool)), this, SLOT(slotTab1OpenFolder()));
    connect(ui->Tab1SpecificFolder, SIGNAL(clicked(bool)), this, SLOT(slotTab1OpenSeriesFolder()));
-   connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1PrintPdf()));
+   connect(ui->Tab3Save, SIGNAL(clicked(bool)), this, SLOT(slotUpdateFolder()));
+   connect(ui->Tab3OpenFold, SIGNAL(clicked(bool)), this, SLOT(slotOpenFolder()));
 }
 
 MainWindow::~MainWindow()
@@ -110,55 +111,22 @@ MainWindow::~MainWindow()
    delete ui;
 }
 
-void MainWindow::slotTab1PrintPdf()
+void MainWindow::slotUpdateFolder()
 {
-   QPrinter printer;
-   printer.setOutputFormat(QPrinter::PdfFormat);
-   printer.setFullPage(true);
-   printer.setPageSize(QPrinter::A4);
-   printer.setOutputFileName(m_url + m_pdfName);
-   printer.setOrientation(QPrinter::Portrait);
-   printer.setPrinterName(printer.printerName());
-   printer.setResolution(600);
+    QString NewFolder = ui->Tab3ScanFolderText->text();
+    QString TempTxt;
 
-   QPainter paint;
+    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
+    {
+        TempTxt = ui->Tab2StatusTable->item(i, FOLDER)->text();
+        TempTxt.replace(GeneralFolder, NewFolder);
+        ui->Tab2StatusTable->setItem(i, FOLDER, new QTableWidgetItem (TempTxt));
+    }
 
-   if(!paint.begin(&printer)) return;
+    GeneralFolder = NewFolder;
 
-   QMatrix matrix;
-   matrix.rotate(270);
-   QRect rect = paint.viewport();
-
-   for (int i = 0; i < /* count images */; i++)
-   {
-       if(i > 0)
-       {
-           if(!printer.newPage()) return;
-       }
-
-       QString imageFolder = /* QString Folder */;
-
-       if(imageFolder.isEmpty()) continue;
-
-       QImage image(imageFolder);
-       QSize size = image.size();
-
-       if(size.width() > size.height())
-       {
-           image = image.transformed(matrix);
-           size = image.size();
-       }
-
-       size.scale(rect.size(), Qt::KeepAspectRatio);
-       int x = rect.x() + ((rect.size().width() - size.width())/2);
-       int y = rect.y() + ((rect.size().height() - size.height())/2);
-
-       paint.setViewport(x, y, size.width(), size.height());
-       paint.setWindow(image.rect());
-       paint.drawImage(0, 0, image);
-   }
-
-   paint.end();
+    ui->Tab1TextScreen->append("");
+    ui->Tab1TextScreen->append("Save folder Updated");
 }
 
 void MainWindow::slotTab1AddButton()
@@ -167,6 +135,11 @@ void MainWindow::slotTab1AddButton()
    AddWindows->show();
 
    connect(AddWindows, SIGNAL(addNewSerie(QStringList)), this, SLOT(AddLineStatusTable(QStringList)));
+}
+
+void MainWindow::slotOpenFolder()
+{
+    ui->Tab3ScanFolderText->setText(QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly));
 }
 
 void MainWindow::slotTab1OpenFolder()
@@ -189,9 +162,6 @@ void MainWindow::AddLineStatusTable(QStringList NewLine)
     ui->Tab1SelectedSerie->addItem(NewLine.at(NAME));
 
     ui->Tab2StatusTable->insertRow(ui->Tab2StatusTable->rowCount());
-
-    NewLine.removeAt(FOLDER);
-    NewLine.insert(FOLDER, GeneralFolder + "\\" + NewLine.at(NAME));
 
     ModifyStatusTable(NewLine, ui->Tab2StatusTable->rowCount() - 1);
 
@@ -233,9 +203,12 @@ void MainWindow::ModifyStatusTable(QStringList NewLine, int Index)
     ui->Tab2StatusTable->setItem(Index, CHAPTER, new QTableWidgetItem(NewLine.at(CHAPTER)));
     ui->Tab2StatusTable->setItem(Index, DATE,    new QTableWidgetItem(NewLine.at(DATE)));
     ui->Tab2StatusTable->setItem(Index, VOLUME,  new QTableWidgetItem(NewLine.at(VOLUME)));
-    ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)));
+    ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)+ "\\" + NewLine.at(NAME)));
     ui->Tab2StatusTable->setItem(Index, URL,     new QTableWidgetItem(NewLine.at(URL)));
     ui->Tab2StatusTable->setItem(Index, DIGIT,   new QTableWidgetItem(NewLine.at(DIGIT)));
+
+    ui->Tab1TextScreen->append("");
+    ui->Tab1TextScreen->append("Database Updated");
 }
 
 void MainWindow::slotTab1Delete()
