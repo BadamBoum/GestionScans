@@ -12,7 +12,6 @@ void SeriesBox::SetSeries(QStringList Datas)
    ChapterVal   = Datas.at(CHAPTER);
    SeriesFolder = Datas.at(FOLDER);
    SeriesURL    = Datas.at(URL);
-   NbOfDigit    = Datas.at(DIGIT);
    ImageVal     = 1;
 }
 
@@ -40,9 +39,9 @@ QString SeriesBox::GetChapter()
    return ChapterVal;
 }
 
-QString SeriesBox::GetNbDigit()
+int SeriesBox::GetImageVal()
 {
-   return NbOfDigit;
+   return ImageVal;
 }
 
 QString SeriesBox::GetSeriesFolder()
@@ -105,22 +104,22 @@ QString SeriesBox::GetImgFolder()
    return folder;
 }
 
-QString SeriesBox::GetURL()
+QString SeriesBox::GetURL(int NbOfDigit, QString ExtFile)
 {
    QString imageURL = SeriesURL;
    QString convertion;
 
    convertion.setNum(ImageVal);
 
-   if (ImageVal < 10)
+   if ((ImageVal < 10) && (NbOfDigit >= 2))
    {
       convertion.push_front("0");
    }
-   if ((ImageVal < 100) && (NbOfDigit.toInt() == 3))
+   if ((ImageVal < 100) && (NbOfDigit >= 3))
    {
       convertion.push_front("0");
    }
-   if ((ImageVal < 1000) && (NbOfDigit.toInt() == 4))
+   if ((ImageVal < 1000) && (NbOfDigit >= 4))
    {
       convertion.push_front("0");
    }
@@ -128,30 +127,13 @@ QString SeriesBox::GetURL()
    imageURL.replace("[Chapter]", ChapterVal);
    imageURL.replace("[Image]", convertion);
 
+   imageURL.remove(imageURL.size() - 3, 3);
+   imageURL += ExtFile;
+
    return imageURL;
 }
 
-QString SeriesBox::GetURLjpg()
+QString SeriesBox::GetURL(QString NbOfDigit, QString ExtFile)
 {
-   QString imageURLjpg = this->GetURL();
-
-   imageURLjpg.remove(imageURLjpg.size() - 3, 3);
-   imageURLjpg += "jpg";
-
-   return imageURLjpg;
-}
-
-QString SeriesBox::GetURLpng()
-{
-   QString imageURLpng = this->GetURL();
-
-   imageURLpng.remove(imageURLpng.size() - 3, 3);
-   imageURLpng += "png";
-
-   return imageURLpng;
-}
-
-int SeriesBox::GetImageVal()
-{
-   return ImageVal;
+   return GetURL(NbOfDigit.toInt(), ExtFile);
 }

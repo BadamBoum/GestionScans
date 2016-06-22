@@ -28,6 +28,7 @@ void Add::slotAddOkButton()
    String.insert(URL,     ui->TextURL->text());
    String.insert(FOLDER,  "");
    String.insert(DIGIT,   ui->DigitValue->cleanText());
+   String.insert(EXT,     ui->TextURL->text().remove(0, ui->TextURL->text().size()));
 
    emit addNewSerie(String);
 

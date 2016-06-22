@@ -242,6 +242,11 @@
         <string>Digits</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>Ext</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">

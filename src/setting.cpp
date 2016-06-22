@@ -39,6 +39,7 @@ void Setting::slotOkButton()
    String.insert(URL,     ui->TextURL->text());
    String.insert(FOLDER,  Folder);
    String.insert(DIGIT,   ui->DigitValue->cleanText());
+   String.insert(EXT,     ui->TextURL->text().remove(0, ui->TextURL->text().size()));
 
    emit ModifySerie(String, CurrentIdx);
 

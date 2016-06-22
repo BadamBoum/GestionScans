@@ -7,7 +7,7 @@
 
 enum Column
 {
-   NAME, CHAPTER, DATE, VOLUME, FOLDER, URL, DIGIT
+   NAME, CHAPTER, DATE, VOLUME, FOLDER, URL, DIGIT, EXT
 };
 
 namespace Ui {
@@ -52,6 +52,19 @@ private:
     QString GeneralFolder;
     int DownloadSeriesIdx = 0;
     int NumberOfSeriesSearch = 0;
+
+    struct TestType
+    {
+       bool ExtJpg2 = false;
+       bool ExtJpg3 = false;
+       bool ExtJpg4 = false;
+       bool ExtPng2 = false;
+       bool ExtPng3 = false;
+       bool ExtPng4 = false;
+       bool SearchURL = false;
+    };
+
+    TestType CurrentStatus;
 };
 
 #endif // MAINWINDOW_H

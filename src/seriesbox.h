@@ -15,10 +15,8 @@ public:
    QString GetSeriesFolder();
    QString GetChapterFolder();
    QString GetImgFolder();
-   QString GetNbDigit();
-   QString GetURL();
-   QString GetURLjpg();
-   QString GetURLpng();
+   QString GetURL(int NbOfDigit, QString ExtFile);
+   QString GetURL(QString NbOfDigit, QString ExtFile);
    int     GetImageVal();
 
 private:
@@ -26,11 +24,10 @@ private:
    QString ChapterVal;
    QString SeriesFolder;
    QString SeriesURL;
-   QString NbOfDigit;
    int     ImageVal;
    enum Column
    {
-      NAME, CHAPTER, DATE, VOLUME, FOLDER, URL, DIGIT
+      NAME, CHAPTER, DATE, VOLUME, FOLDER, URL
    };
 };
 

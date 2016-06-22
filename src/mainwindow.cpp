@@ -60,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
                ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DATE, new QTableWidgetItem(String));
                String = ligneSplitee.at(DIGIT);
                ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DIGIT, new QTableWidgetItem(String));
+               String = ligneSplitee.at(EXT);
+               ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, EXT, new QTableWidgetItem(String));
             }
          }
       }
@@ -249,6 +251,7 @@ QStringList MainWindow::GetLineInfos(int Idx)
    StringRet.insert(URL,     ui->Tab2StatusTable->item(Idx, URL)->text());
    StringRet.insert(FOLDER,  GeneralFolder);
    StringRet.insert(DIGIT,   ui->Tab2StatusTable->item(Idx, DIGIT)->text());
+   StringRet.insert(EXT,     ui->Tab2StatusTable->item(Idx, EXT)->text());
 
    return StringRet;
 }
@@ -262,6 +265,7 @@ void MainWindow::ModifyStatusTable(QStringList NewLine, int Index)
     ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)+ "\\" + NewLine.at(NAME)));
     ui->Tab2StatusTable->setItem(Index, URL,     new QTableWidgetItem(NewLine.at(URL)));
     ui->Tab2StatusTable->setItem(Index, DIGIT,   new QTableWidgetItem(NewLine.at(DIGIT)));
+    ui->Tab2StatusTable->setItem(Index, EXT,     new QTableWidgetItem(NewLine.at(EXT)));
 
     ui->Tab1TextScreen->append("");
     ui->Tab1TextScreen->append("Database Updated");
@@ -299,8 +303,15 @@ void MainWindow::slotTab1Search()
    NumberOfSeriesSearch = ui->Tab2StatusTable->rowCount();
    CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
    CurrentSerie.UpdateChapterVal();
+   CurrentStatus.ExtJpg2   = false;
+   CurrentStatus.ExtJpg3   = false;
+   CurrentStatus.ExtJpg4   = false;
+   CurrentStatus.ExtPng2   = false;
+   CurrentStatus.ExtPng3   = false;
+   CurrentStatus.ExtPng4   = false;
+   CurrentStatus.SearchURL = false;
 
-   TestUrl(CurrentSerie.GetURL());
+   TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(0, DIGIT)->text(), ui->Tab2StatusTable->item(0, EXT)->text()));
 }
 
 void MainWindow::slotTab1SearchOne()
@@ -312,8 +323,15 @@ void MainWindow::slotTab1SearchOne()
    NumberOfSeriesSearch = 1;
    CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
    CurrentSerie.UpdateChapterVal();
+   CurrentStatus.ExtJpg2   = false;
+   CurrentStatus.ExtJpg3   = false;
+   CurrentStatus.ExtJpg4   = false;
+   CurrentStatus.ExtPng2   = false;
+   CurrentStatus.ExtPng3   = false;
+   CurrentStatus.ExtPng4   = false;
+   CurrentStatus.SearchURL = false;
 
-   TestUrl(CurrentSerie.GetURL());
+   TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
 }
 
 void MainWindow::TestUrl(QUrl url)
@@ -327,7 +345,7 @@ void MainWindow::TestUrl(QUrl url)
    if(ui->DebugBox->isChecked())
    {
       ui->Tab1TextScreen->append("URL tested :");
-//      ui->Tab1TextScreen->append(url);
+      ui->Tab1TextScreen->append(url.toString());
    }
 
    connect(r, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(messageErreur(QNetworkReply::NetworkError)));
@@ -363,6 +381,89 @@ void MainWindow::enregistrer()
 
    if(!erreurTrouvee)
    {
+      if (CurrentStatus.SearchURL == true)
+      {
+         if(ui->DebugBox->isChecked())
+         {
+            ui->Tab1TextScreen->append("New Type of URL founded");
+         }
+         if (CurrentStatus.ExtPng4 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("4 Digit / png");
+            }
+         }
+         else if (CurrentStatus.ExtPng3 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("3 Digit / png");
+            }
+         }
+         else if (CurrentStatus.ExtPng2 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("2 Digit / png");
+            }
+         }
+         else if (CurrentStatus.ExtJpg4 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("4 Digit / jpg");
+            }
+         }
+         else if (CurrentStatus.ExtJpg3 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("3 Digit / jpg");
+            }
+         }
+         else if (CurrentStatus.ExtJpg2 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("2 Digit / jpg");
+            }
+         }
+         else
+         {
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("Error when search new URL type");
+            }
+         }
+
+         CurrentStatus.ExtJpg2   = false;
+         CurrentStatus.ExtJpg3   = false;
+         CurrentStatus.ExtJpg4   = false;
+         CurrentStatus.ExtPng2   = false;
+         CurrentStatus.ExtPng3   = false;
+         CurrentStatus.ExtPng4   = false;
+         CurrentStatus.SearchURL = false;
+      }
+
       QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
 
       if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
@@ -381,7 +482,12 @@ void MainWindow::enregistrer()
          QDir().mkdir(CurrentSerie.GetChapterFolder());
       }
 
-      QFile f(CurrentSerie.GetImgFolder());
+      QString ImgName = CurrentSerie.GetImgFolder();
+
+      ImgName.remove(ImgName.size() - 3, 3);
+      ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+
+      QFile f(ImgName);
 
       if (f.open(QIODevice::WriteOnly))
       {
@@ -401,7 +507,54 @@ void MainWindow::enregistrer()
    }
    else
    {
-      downloadNextImage(false);
+      CurrentStatus.SearchURL = true;
+
+      if (CurrentStatus.ExtJpg2 == false)
+      {
+         CurrentStatus.ExtJpg2 = true;
+         TestUrl(CurrentSerie.GetURL(2, "jpg"));
+      }
+      else if (CurrentStatus.ExtJpg3 == false)
+      {
+         CurrentStatus.ExtJpg3 = true;
+         TestUrl(CurrentSerie.GetURL(3, "jpg"));
+      }
+      else if (CurrentStatus.ExtJpg4 == false)
+      {
+         CurrentStatus.ExtJpg4 = true;
+         TestUrl(CurrentSerie.GetURL(4, "jpg"));
+      }
+      else if (CurrentStatus.ExtPng2 == false)
+      {
+         CurrentStatus.ExtPng2 = true;
+         TestUrl(CurrentSerie.GetURL(2, "png"));
+      }
+      else if (CurrentStatus.ExtPng3 == false)
+      {
+         CurrentStatus.ExtPng3 = true;
+         TestUrl(CurrentSerie.GetURL(3, "png"));
+      }
+      else if (CurrentStatus.ExtPng4 == false)
+      {
+         CurrentStatus.ExtPng4 = true;
+         TestUrl(CurrentSerie.GetURL(4, "png"));
+      }
+      else
+      {
+         if(ui->DebugBox->isChecked())
+         {
+            ui->Tab1TextScreen->append("URL not found");
+         }
+
+         CurrentStatus.ExtJpg2   = false;
+         CurrentStatus.ExtJpg3   = false;
+         CurrentStatus.ExtJpg4   = false;
+         CurrentStatus.ExtPng2   = false;
+         CurrentStatus.ExtPng3   = false;
+         CurrentStatus.ExtPng4   = false;
+         CurrentStatus.SearchURL = false;
+         downloadNextImage(false);
+      }
    }
 
    erreurTrouvee = false;
@@ -414,7 +567,7 @@ void MainWindow::downloadNextImage(bool lastStatus)
    if (  ((CurrentSerie.GetImageVal() < 100) && (lastStatus == true))
       || (CurrentSerie.GetImageVal() < 5))
    {
-      TestUrl(CurrentSerie.GetURL());
+      TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
    }
    else
    {
@@ -434,7 +587,7 @@ void MainWindow::downloadNextImage(bool lastStatus)
          CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
          CurrentSerie.UpdateChapterVal();
 
-         TestUrl(CurrentSerie.GetURL());
+         TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
       }
       else
       {
