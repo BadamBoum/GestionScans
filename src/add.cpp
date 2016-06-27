@@ -27,7 +27,7 @@ void Add::slotAddOkButton()
    String.insert(VOLUME,  ui->VolumeValue->cleanText());
    String.insert(URL,     ui->TextURL->text());
    String.insert(FOLDER,  "");
-   String.insert(DIGIT,   ui->DigitValue->cleanText());
+   String.insert(DIGIT,   "2");
    String.insert(EXT,     ui->TextURL->text().remove(0, ui->TextURL->text().size()));
 
    emit addNewSerie(String);

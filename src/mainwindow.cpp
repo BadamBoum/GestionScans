@@ -33,15 +33,23 @@ MainWindow::MainWindow(QWidget *parent) :
       {
          if(line.isEmpty() == false)
          {
+             QByteArrayList ligneSplitee = line.split(';');
             if (firstLine == false)
             {
-               GeneralFolder = line;
+               GeneralFolder = ligneSplitee.at(0);
                ui->Tab3ScanFolderText->setText(GeneralFolder);
+               if(ligneSplitee.at(1) == "AutoSearch=True")
+               {
+                   ui->Tab3AutoSearch->setChecked(true);
+               }
+               if(ligneSplitee.at(2) == "Debug=True")
+               {
+                   ui->DebugBox->setChecked(true);
+               }
                firstLine = true;
             }
             else
             {
-               QByteArrayList ligneSplitee = line.split(';');
                QString String = ligneSplitee.at(NAME);
                ui->Tab2StatusTable->insertRow(ui->Tab2StatusTable->rowCount());
 
@@ -78,6 +86,8 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1PrintPdf()));
    connect(ui->Tab3Save, SIGNAL(clicked(bool)), this, SLOT(slotUpdateFolder()));
    connect(ui->Tab3OpenFold, SIGNAL(clicked(bool)), this, SLOT(slotOpenFolder()));
+
+   if (ui->Tab3AutoSearch->isChecked()) slotTab1Search();
 }
 
 MainWindow::~MainWindow()
@@ -88,6 +98,24 @@ MainWindow::~MainWindow()
    QString temp;
 
    temp.append(ui->Tab3ScanFolderText->text());
+   temp.append( ";" );
+   if (ui->Tab3AutoSearch->isChecked())
+   {
+       temp.append( "AutoSearch=True" );
+   }
+   else
+   {
+       temp.append( "AutoSearch=False" );
+   }
+   temp.append( ";" );
+   if (ui->DebugBox->isChecked())
+   {
+       temp.append( "Debug=True" );
+   }
+   else
+   {
+       temp.append( "Debug=False" );
+   }
    temp.append( "\n" );
 
    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
@@ -258,17 +286,31 @@ QStringList MainWindow::GetLineInfos(int Idx)
 
 void MainWindow::ModifyStatusTable(QStringList NewLine, int Index)
 {
-    ui->Tab2StatusTable->setItem(Index, NAME,    new QTableWidgetItem(NewLine.at(NAME)));
-    ui->Tab2StatusTable->setItem(Index, CHAPTER, new QTableWidgetItem(NewLine.at(CHAPTER)));
-    ui->Tab2StatusTable->setItem(Index, DATE,    new QTableWidgetItem(NewLine.at(DATE)));
-    ui->Tab2StatusTable->setItem(Index, VOLUME,  new QTableWidgetItem(NewLine.at(VOLUME)));
-    ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)+ "\\" + NewLine.at(NAME)));
-    ui->Tab2StatusTable->setItem(Index, URL,     new QTableWidgetItem(NewLine.at(URL)));
-    ui->Tab2StatusTable->setItem(Index, DIGIT,   new QTableWidgetItem(NewLine.at(DIGIT)));
-    ui->Tab2StatusTable->setItem(Index, EXT,     new QTableWidgetItem(NewLine.at(EXT)));
+    if (NewLine.at(NAME) != "")
+    {
+        if (NewLine.at(URL) != "")
+        {
+            ui->Tab2StatusTable->setItem(Index, NAME,    new QTableWidgetItem(NewLine.at(NAME)));
+            ui->Tab2StatusTable->setItem(Index, CHAPTER, new QTableWidgetItem(NewLine.at(CHAPTER)));
+            ui->Tab2StatusTable->setItem(Index, DATE,    new QTableWidgetItem(NewLine.at(DATE)));
+            ui->Tab2StatusTable->setItem(Index, VOLUME,  new QTableWidgetItem(NewLine.at(VOLUME)));
+            ui->Tab2StatusTable->setItem(Index, FOLDER,  new QTableWidgetItem(NewLine.at(FOLDER)+ "\\" + NewLine.at(NAME)));
+            ui->Tab2StatusTable->setItem(Index, URL,     new QTableWidgetItem(NewLine.at(URL)));
+            ui->Tab2StatusTable->setItem(Index, DIGIT,   new QTableWidgetItem(NewLine.at(DIGIT)));
+            ui->Tab2StatusTable->setItem(Index, EXT,     new QTableWidgetItem(NewLine.at(EXT)));
 
-    ui->Tab1TextScreen->append("");
-    ui->Tab1TextScreen->append("Database Updated");
+            ui->Tab1TextScreen->append("");
+            ui->Tab1TextScreen->append("Database Updated");
+        }
+        else
+        {
+            ui->Tab1TextScreen->append("Error. Missing URL");
+        }
+    }
+    else
+    {
+        ui->Tab1TextScreen->append("Error. Missing series name");
+    }
 }
 
 void MainWindow::slotTab1Delete()
@@ -465,45 +507,67 @@ void MainWindow::enregistrer()
       }
 
       QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
+      bool FolderExist = true;
 
       if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
       {
-         ui->Tab1TextScreen->append("");
-         ui->Tab1TextScreen->append("CreateFolder :");
-         ui->Tab1TextScreen->append(CurrentSerie.GetSeriesFolder());
          QDir().mkdir(CurrentSerie.GetSeriesFolder());
+
+         if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
+         {
+             ui->Tab1TextScreen->append("Error. Can't create new Folder");
+             FolderExist = false;
+         }
+         else
+         {
+             ui->Tab1TextScreen->append("");
+             ui->Tab1TextScreen->append("CreateFolder :");
+             ui->Tab1TextScreen->append(CurrentSerie.GetSeriesFolder());
+         }
       }
 
       if(QDir(CurrentSerie.GetChapterFolder()).exists() == false)
       {
-         ui->Tab1TextScreen->append("");
-         ui->Tab1TextScreen->append("CreateFolder :");
-         ui->Tab1TextScreen->append(CurrentSerie.GetChapterFolder());
          QDir().mkdir(CurrentSerie.GetChapterFolder());
+
+         if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
+         {
+             ui->Tab1TextScreen->append("Error. Can't create new Folder");
+             FolderExist = false;
+         }
+         else
+         {
+             ui->Tab1TextScreen->append("");
+             ui->Tab1TextScreen->append("CreateFolder :");
+             ui->Tab1TextScreen->append(CurrentSerie.GetChapterFolder());
+         }
       }
 
-      QString ImgName = CurrentSerie.GetImgFolder();
-
-      ImgName.remove(ImgName.size() - 3, 3);
-      ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
-
-      QFile f(ImgName);
-
-      if (f.open(QIODevice::WriteOnly))
+      if (FolderExist == true)
       {
-         f.write(r->readAll());
-         f.close();
-         r->deleteLater();
-      }
+          QString ImgName = CurrentSerie.GetImgFolder();
 
-      if(ui->DebugBox->isChecked())
-      {
-         ui->Tab1TextScreen->append("URL saved :");
-         ui->Tab1TextScreen->append(r->url().toString());
-      }
+          ImgName.remove(ImgName.size() - 3, 3);
+          ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
 
-      ui->Tab1TextScreen->append(CurrentSerie.GetImgFolder());
-      downloadNextImage(true);
+          QFile f(ImgName);
+
+          if (f.open(QIODevice::WriteOnly))
+          {
+             f.write(r->readAll());
+             f.close();
+             r->deleteLater();
+          }
+
+          if(ui->DebugBox->isChecked())
+          {
+             ui->Tab1TextScreen->append("URL saved :");
+             ui->Tab1TextScreen->append(r->url().toString());
+          }
+
+          ui->Tab1TextScreen->append(CurrentSerie.GetImgFolder());
+          downloadNextImage(true);
+      }
    }
    else
    {

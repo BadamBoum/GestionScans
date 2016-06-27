@@ -30,6 +30,7 @@ private:
    int CurrentIdx = 0;
    QString Date;
    QString Folder;
+   QString Digit;
 };
 
 #endif // SETTING_H
