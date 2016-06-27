@@ -20,7 +20,6 @@ Add::~Add()
 void Add::slotAddOkButton()
 {
    QStringList String;
-   QString temp;
    String.insert(NAME,    ui->TextSeriesName->text());
    String.insert(CHAPTER, ui->ChapterValue->cleanText());
    String.insert(DATE,    QDate::currentDate().toString("dd.MM.yyyy"));
@@ -29,6 +28,15 @@ void Add::slotAddOkButton()
    String.insert(FOLDER,  "");
    String.insert(DIGIT,   "2");
    String.insert(EXT,     ui->TextURL->text().remove(0, ui->TextURL->text().size()));
+
+   if (ui->BoxWeeklyPDF->isChecked() == true)
+   {
+      String.insert(WEEKLY, "true");
+   }
+   else
+   {
+      String.insert(WEEKLY, "false");
+   }
 
    emit addNewSerie(String);
 

@@ -70,6 +70,8 @@ MainWindow::MainWindow(QWidget *parent) :
                ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, DIGIT, new QTableWidgetItem(String));
                String = ligneSplitee.at(EXT);
                ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, EXT, new QTableWidgetItem(String));
+               String = ligneSplitee.at(WEEKLY);
+               ui->Tab2StatusTable->setItem(ui->Tab2StatusTable->rowCount() - 1, WEEKLY, new QTableWidgetItem(String));
             }
          }
       }
@@ -143,55 +145,119 @@ MainWindow::~MainWindow()
    delete ui;
 }
 
-void MainWindow::slotTab1PrintPdf()
+void MainWindow::slotTab1PrintPdf(QString Folder)
 {
-//   QPrinter printer;
-//   printer.setOutputFormat(QPrinter::PdfFormat);
-//   printer.setFullPage(true);
-//   printer.setPageSize(QPrinter::A4);
-//   printer.setOutputFileName(m_url + m_pdfName);
-//   printer.setOrientation(QPrinter::Portrait);
-//   printer.setPrinterName(printer.printerName());
-//   printer.setResolution(600);
+   bool allImageFounded = false;
+   int i = 0;
+   QString chapterTxt = Folder;
+   QPrinter printer;
+   printer.setOutputFormat(QPrinter::PdfFormat);
+   printer.setFullPage(true);
+   printer.setPageSize(QPrinter::A4);
+   printer.setOutputFileName(chapterTxt.remove(0, chapterTxt.size()-3));
+   printer.setOrientation(QPrinter::Portrait);
+   printer.setPrinterName(printer.printerName());
+   printer.setResolution(600);
 
-//   QPainter paint;
+//   QPainter chapter(this);
 
-//   if(!paint.begin(&printer)) return;
+//   if(!chapter.begin(&printer)) return;
 
-//   QMatrix matrix;
-//   matrix.rotate(270);
-//   QRect rect = paint.viewport();
+   QMatrix matrix;
+   matrix.rotate(270);
+//   QRect rect = chapter.viewport();
 
-//   for (int i = 0; i < /* count images */; i++)
-//   {
-//       if(i > 0)
-//       {
-//           if(!printer.newPage()) return;
-//       }
+   while(allImageFounded == false)
+   {
+      QString imageFolder = Folder;
+      imageFolder += "\\";
+      imageFolder += chapterTxt;
+      imageFolder += "_";
 
-//       QString imageFolder = /* QString Folder */;
+      QString convertion;
+      convertion.setNum(i);
 
-//       if(imageFolder.isEmpty()) continue;
+      if (i < 10)
+      {
+         convertion.push_front("0");
+      }
 
-//       QImage image(imageFolder);
-//       QSize size = image.size();
+      imageFolder += convertion;
+      imageFolder += ".";
+      imageFolder += "jpg";
 
-//       if(size.width() > size.height())
-//       {
-//           image = image.transformed(matrix);
-//           size = image.size();
-//       }
+      QFile Image(imageFolder);
 
-//       size.scale(rect.size(), Qt::KeepAspectRatio);
-//       int x = rect.x() + ((rect.size().width() - size.width())/2);
-//       int y = rect.y() + ((rect.size().height() - size.height())/2);
+      if(Image.exists() == false)
+      {
+         imageFolder.remove(imageFolder.size()-3, imageFolder.size());
+         imageFolder += "png";
+         Image.setFileName(imageFolder);
+         if(Image.exists() == false)
+         {
+            if(i > 5)
+            {
+               allImageFounded = true;
+            }
+            else
+            {
+               i++;
+            }
+         }
+         else
+         {
+            if(i > 0)
+            {
+                if(!printer.newPage()) return;
+            }
 
-//       paint.setViewport(x, y, size.width(), size.height());
-//       paint.setWindow(image.rect());
-//       paint.drawImage(0, 0, image);
-//   }
+            QImage image(imageFolder);
+            QSize size = image.size();
 
-//   paint.end();
+            if(size.width() > size.height())
+            {
+                image = image.transformed(matrix);
+                size = image.size();
+            }
+
+  //          size.scale(rect.size(), Qt::KeepAspectRatio);
+  //          int x = rect.x() + ((rect.size().width() - size.width())/2);
+  //          int y = rect.y() + ((rect.size().height() - size.height())/2);
+
+  //          chapter.setViewport(x, y, size.width(), size.height());
+  //          chapter.setWindow(image.rect());
+  //          chapter.drawImage(0, 0, image);
+            i++;
+         }
+      }
+      else
+      {
+          if(i > 0)
+          {
+              if(!printer.newPage()) return;
+          }
+
+          QImage image(imageFolder);
+          QSize size = image.size();
+
+          if(size.width() > size.height())
+          {
+              image = image.transformed(matrix);
+              size = image.size();
+          }
+
+//          size.scale(rect.size(), Qt::KeepAspectRatio);
+//          int x = rect.x() + ((rect.size().width() - size.width())/2);
+//          int y = rect.y() + ((rect.size().height() - size.height())/2);
+
+//          chapter.setViewport(x, y, size.width(), size.height());
+//          chapter.setWindow(image.rect());
+//          chapter.drawImage(0, 0, image);
+          i++;
+      }
+   }
+
+//   chapter.end();
 }
 
 void MainWindow::slotUpdateFolder()
@@ -280,6 +346,7 @@ QStringList MainWindow::GetLineInfos(int Idx)
    StringRet.insert(FOLDER,  GeneralFolder);
    StringRet.insert(DIGIT,   ui->Tab2StatusTable->item(Idx, DIGIT)->text());
    StringRet.insert(EXT,     ui->Tab2StatusTable->item(Idx, EXT)->text());
+   StringRet.insert(WEEKLY,  ui->Tab2StatusTable->item(Idx, WEEKLY)->text());
 
    return StringRet;
 }
@@ -298,6 +365,7 @@ void MainWindow::ModifyStatusTable(QStringList NewLine, int Index)
             ui->Tab2StatusTable->setItem(Index, URL,     new QTableWidgetItem(NewLine.at(URL)));
             ui->Tab2StatusTable->setItem(Index, DIGIT,   new QTableWidgetItem(NewLine.at(DIGIT)));
             ui->Tab2StatusTable->setItem(Index, EXT,     new QTableWidgetItem(NewLine.at(EXT)));
+            ui->Tab2StatusTable->setItem(Index, WEEKLY,  new QTableWidgetItem(NewLine.at(WEEKLY)));
 
             ui->Tab1TextScreen->append("");
             ui->Tab1TextScreen->append("Database Updated");
@@ -643,6 +711,10 @@ void MainWindow::downloadNextImage(bool lastStatus)
          QString ChapterTxt;
          ChapterTxt.setNum(chapterValue);
          ui->Tab2StatusTable->setItem(DownloadSeriesIdx, CHAPTER, new QTableWidgetItem(ChapterTxt));
+         if(ui->Tab2StatusTable->item(DownloadSeriesIdx, WEEKLY)->text() == "true")
+         {
+            slotTab1PrintPdf(CurrentSerie.GetChapterFolder());
+         }
       }
 
       DownloadSeriesIdx++;

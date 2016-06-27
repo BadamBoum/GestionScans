@@ -247,6 +247,11 @@
         <string>Ext</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>Weekly</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
