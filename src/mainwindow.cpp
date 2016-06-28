@@ -7,6 +7,9 @@
 #include <QProcess>
 #include <QFileDialog>
 #include <QPrinter>
+#include <QPrintDialog>
+#include <QPdfWriter>
+#include <QPainter>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -147,29 +150,70 @@ MainWindow::~MainWindow()
 
 void MainWindow::slotTab1PrintPdf(QString Folder)
 {
+   QPdfWriter printpdf(Folder + ".pdf");
+   printpdf.setPageSize(QPagedPaintDevice::A4);
+   printpdf.setPageOrientation(QPageLayout::Portrait);
+   const qreal horizontalMarginMM = 10.0;
+   const qreal verticalMarginMM = 10.0;
+   QPagedPaintDevice::Margins margins;
+   margins.left = margins.right = horizontalMarginMM;
+   margins.top = margins.bottom = verticalMarginMM;
+   printpdf.setMargins(margins);
+
+//   //Render the QTableWidget in a QPixmap
+//   QPixmap tempPixmap(ui->tableWidget->size());
+//   //QPixmap tempPixmap(QSize(1920,1080));
+//   ui->tableWidget->render(&tempPixmap);
+
+//   //Rotate the QPixmap
+//   QTransform t;
+//   QPixmap pixmap(ui->tableWidget->size().transposed());
+//   pixmap = tempPixmap.transformed(t.rotate(90),Qt::SmoothTransformation);
+
+
+   //Draw the QPixmap with a QPainter
+//   QPainter painter;
+//   painter.begin(&printpdf);
+//   painter.drawPixmap(QRectF(0, 0, test.width(), test.height()), pixmap, QRectF(0, 0,pixmap.width(), pixmap.height()));
+//   painter.end();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    bool allImageFounded = false;
    int i = 0;
    QString chapterTxt = Folder;
-   QPrinter printer;
-   printer.setOutputFormat(QPrinter::PdfFormat);
-   printer.setFullPage(true);
-   printer.setPageSize(QPrinter::A4);
-   printer.setOutputFileName(chapterTxt.remove(0, chapterTxt.size()-3));
-   printer.setOrientation(QPrinter::Portrait);
-   printer.setPrinterName(printer.printerName());
-   printer.setResolution(600);
+   chapterTxt.remove(0, chapterTxt.size()-3);
+//   QPrinter printer;
+//   printer.setOutputFormat(QPrinter::PdfFormat);
+//   printer.setFullPage(true);
+//   printer.setPageSize(QPrinter::A4);
+//   printer.setOutputFileName(Folder + ".pdf");
+//   printer.setOrientation(QPrinter::Portrait);
+//   printer.setPrinterName(printer.printerName());
+//   printer.setResolution(600);
 
-//   QPainter chapter(this);
+   QPainter chapter;
 
-//   if(!chapter.begin(&printer)) return;
+   chapter.begin(&printpdf);
 
    QMatrix matrix;
    matrix.rotate(270);
-//   QRect rect = chapter.viewport();
+   QRect rect = chapter.viewport();
 
    while(allImageFounded == false)
    {
-      QString imageFolder = Folder;
+      String imageFolder = Folder;
       imageFolder += "\\";
       imageFolder += chapterTxt;
       imageFolder += "_";
@@ -186,14 +230,14 @@ void MainWindow::slotTab1PrintPdf(QString Folder)
       imageFolder += ".";
       imageFolder += "jpg";
 
-      QFile Image(imageFolder);
+      QFile ImageFile(imageFolder);
 
-      if(Image.exists() == false)
+      if(ImageFile.exists() == false)
       {
          imageFolder.remove(imageFolder.size()-3, imageFolder.size());
          imageFolder += "png";
-         Image.setFileName(imageFolder);
-         if(Image.exists() == false)
+         ImageFile.setFileName(imageFolder);
+         if(ImageFile.exists() == false)
          {
             if(i > 5)
             {
@@ -208,10 +252,13 @@ void MainWindow::slotTab1PrintPdf(QString Folder)
          {
             if(i > 0)
             {
-                if(!printer.newPage()) return;
+//                if(!printer.newPage()) return;
+               printpdf.newPage();
             }
 
             QImage image(imageFolder);
+            QPixmap Pix;
+            Pix.load(imageFolder);
             QSize size = image.size();
 
             if(size.width() > size.height())
@@ -220,13 +267,14 @@ void MainWindow::slotTab1PrintPdf(QString Folder)
                 size = image.size();
             }
 
-  //          size.scale(rect.size(), Qt::KeepAspectRatio);
-  //          int x = rect.x() + ((rect.size().width() - size.width())/2);
-  //          int y = rect.y() + ((rect.size().height() - size.height())/2);
+            size.scale(rect.size(), Qt::KeepAspectRatio);
+            int x = rect.x() + ((rect.size().width() - size.width())/2);
+            int y = rect.y() + ((rect.size().height() - size.height())/2);
 
-  //          chapter.setViewport(x, y, size.width(), size.height());
-  //          chapter.setWindow(image.rect());
-  //          chapter.drawImage(0, 0, image);
+//          chapter.setViewport(x, y, size.width(), size.height());
+//          chapter.setWindow(image.rect());
+//          chapter.drawImage(0, 0, image);
+            chapter.drawPixmap(rect, Pix);
             i++;
          }
       }
@@ -234,11 +282,13 @@ void MainWindow::slotTab1PrintPdf(QString Folder)
       {
           if(i > 0)
           {
-              if(!printer.newPage()) return;
+             printpdf.newPage();
           }
 
           QImage image(imageFolder);
           QSize size = image.size();
+          QPixmap Pix;
+          Pix.load(imageFolder);
 
           if(size.width() > size.height())
           {
@@ -246,18 +296,19 @@ void MainWindow::slotTab1PrintPdf(QString Folder)
               size = image.size();
           }
 
-//          size.scale(rect.size(), Qt::KeepAspectRatio);
-//          int x = rect.x() + ((rect.size().width() - size.width())/2);
-//          int y = rect.y() + ((rect.size().height() - size.height())/2);
+          size.scale(rect.size(), Qt::KeepAspectRatio);
+          int x = rect.x() + ((rect.size().width() - size.width())/2);
+          int y = rect.y() + ((rect.size().height() - size.height())/2);
 
 //          chapter.setViewport(x, y, size.width(), size.height());
 //          chapter.setWindow(image.rect());
 //          chapter.drawImage(0, 0, image);
+          chapter.drawPixmap(rect, Pix);
           i++;
       }
    }
 
-//   chapter.end();
+   chapter.end();
 }
 
 void MainWindow::slotUpdateFolder()
