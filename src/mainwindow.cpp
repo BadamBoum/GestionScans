@@ -6,10 +6,6 @@
 #include <QtNetwork>
 #include <QProcess>
 #include <QFileDialog>
-#include <QPrinter>
-#include <QPrintDialog>
-#include <QPdfWriter>
-#include <QPainter>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -29,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
    if(DatafileContent.isEmpty() == false)
    {
-      ui->Tab1TextScreen->append("Database founded");
+      ui->Tab1TextScreen->append("Database found");
       QByteArrayList DatafileLine = DatafileContent.split('\n');
 
       foreach(QByteArray line, DatafileLine)
@@ -97,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-   QFile Datafile("datafile_out.txt");
+   QFile Datafile("datafile.txt");
    Datafile.open(QIODevice::WriteOnly);
    QTextStream out(&Datafile);
    QString temp;
@@ -150,165 +146,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::slotTab1PrintPdf(QString Folder)
 {
-   QPdfWriter printpdf(Folder + ".pdf");
-   printpdf.setPageSize(QPagedPaintDevice::A4);
-   printpdf.setPageOrientation(QPageLayout::Portrait);
-   const qreal horizontalMarginMM = 10.0;
-   const qreal verticalMarginMM = 10.0;
-   QPagedPaintDevice::Margins margins;
-   margins.left = margins.right = horizontalMarginMM;
-   margins.top = margins.bottom = verticalMarginMM;
-   printpdf.setMargins(margins);
-
-//   //Render the QTableWidget in a QPixmap
-//   QPixmap tempPixmap(ui->tableWidget->size());
-//   //QPixmap tempPixmap(QSize(1920,1080));
-//   ui->tableWidget->render(&tempPixmap);
-
-//   //Rotate the QPixmap
-//   QTransform t;
-//   QPixmap pixmap(ui->tableWidget->size().transposed());
-//   pixmap = tempPixmap.transformed(t.rotate(90),Qt::SmoothTransformation);
-
-
-   //Draw the QPixmap with a QPainter
-//   QPainter painter;
-//   painter.begin(&printpdf);
-//   painter.drawPixmap(QRectF(0, 0, test.width(), test.height()), pixmap, QRectF(0, 0,pixmap.width(), pixmap.height()));
-//   painter.end();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   bool allImageFounded = false;
-   int i = 0;
-   QString chapterTxt = Folder;
-   chapterTxt.remove(0, chapterTxt.size()-3);
-//   QPrinter printer;
-//   printer.setOutputFormat(QPrinter::PdfFormat);
-//   printer.setFullPage(true);
-//   printer.setPageSize(QPrinter::A4);
-//   printer.setOutputFileName(Folder + ".pdf");
-//   printer.setOrientation(QPrinter::Portrait);
-//   printer.setPrinterName(printer.printerName());
-//   printer.setResolution(600);
-
-   QPainter chapter;
-
-   chapter.begin(&printpdf);
-
-   QMatrix matrix;
-   matrix.rotate(270);
-   QRect rect = chapter.viewport();
-
-   while(allImageFounded == false)
-   {
-      String imageFolder = Folder;
-      imageFolder += "\\";
-      imageFolder += chapterTxt;
-      imageFolder += "_";
-
-      QString convertion;
-      convertion.setNum(i);
-
-      if (i < 10)
-      {
-         convertion.push_front("0");
-      }
-
-      imageFolder += convertion;
-      imageFolder += ".";
-      imageFolder += "jpg";
-
-      QFile ImageFile(imageFolder);
-
-      if(ImageFile.exists() == false)
-      {
-         imageFolder.remove(imageFolder.size()-3, imageFolder.size());
-         imageFolder += "png";
-         ImageFile.setFileName(imageFolder);
-         if(ImageFile.exists() == false)
-         {
-            if(i > 5)
-            {
-               allImageFounded = true;
-            }
-            else
-            {
-               i++;
-            }
-         }
-         else
-         {
-            if(i > 0)
-            {
-//                if(!printer.newPage()) return;
-               printpdf.newPage();
-            }
-
-            QImage image(imageFolder);
-            QPixmap Pix;
-            Pix.load(imageFolder);
-            QSize size = image.size();
-
-            if(size.width() > size.height())
-            {
-                image = image.transformed(matrix);
-                size = image.size();
-            }
-
-            size.scale(rect.size(), Qt::KeepAspectRatio);
-            int x = rect.x() + ((rect.size().width() - size.width())/2);
-            int y = rect.y() + ((rect.size().height() - size.height())/2);
-
-//          chapter.setViewport(x, y, size.width(), size.height());
-//          chapter.setWindow(image.rect());
-//          chapter.drawImage(0, 0, image);
-            chapter.drawPixmap(rect, Pix);
-            i++;
-         }
-      }
-      else
-      {
-          if(i > 0)
-          {
-             printpdf.newPage();
-          }
-
-          QImage image(imageFolder);
-          QSize size = image.size();
-          QPixmap Pix;
-          Pix.load(imageFolder);
-
-          if(size.width() > size.height())
-          {
-              image = image.transformed(matrix);
-              size = image.size();
-          }
-
-          size.scale(rect.size(), Qt::KeepAspectRatio);
-          int x = rect.x() + ((rect.size().width() - size.width())/2);
-          int y = rect.y() + ((rect.size().height() - size.height())/2);
-
-//          chapter.setViewport(x, y, size.width(), size.height());
-//          chapter.setWindow(image.rect());
-//          chapter.drawImage(0, 0, image);
-          chapter.drawPixmap(rect, Pix);
-          i++;
-      }
-   }
-
-   chapter.end();
 }
 
 void MainWindow::slotUpdateFolder()
@@ -419,7 +256,7 @@ void MainWindow::ModifyStatusTable(QStringList NewLine, int Index)
             ui->Tab2StatusTable->setItem(Index, WEEKLY,  new QTableWidgetItem(NewLine.at(WEEKLY)));
 
             ui->Tab1TextScreen->append("");
-            ui->Tab1TextScreen->append("Database Updated");
+            ui->Tab1TextScreen->append("Database update for " + NewLine.at(NAME));
         }
         else
         {
@@ -459,6 +296,7 @@ void MainWindow::slotTab1Search()
 {
    ui->Tab1TextScreen->append("");
    ui->Tab1TextScreen->append("***Global Search Start***");
+   ui->Tab1TextScreen->append("");
 
    DownloadSeriesIdx    = 0;
    NumberOfSeriesSearch = ui->Tab2StatusTable->rowCount();
@@ -472,6 +310,7 @@ void MainWindow::slotTab1Search()
    CurrentStatus.ExtPng4   = false;
    CurrentStatus.SearchURL = false;
 
+   ui->Tab1TextScreen->append("Searching chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName());
    TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(0, DIGIT)->text(), ui->Tab2StatusTable->item(0, EXT)->text()));
 }
 
@@ -479,6 +318,7 @@ void MainWindow::slotTab1SearchOne()
 {
    ui->Tab1TextScreen->append("");
    ui->Tab1TextScreen->append("***Search Start***");
+   ui->Tab1TextScreen->append("");
 
    DownloadSeriesIdx    = ui->Tab1SelectedSerie->currentIndex();
    NumberOfSeriesSearch = 1;
@@ -492,6 +332,7 @@ void MainWindow::slotTab1SearchOne()
    CurrentStatus.ExtPng4   = false;
    CurrentStatus.SearchURL = false;
 
+   ui->Tab1TextScreen->append("Searching chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName());
    TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
 }
 
@@ -682,9 +523,8 @@ void MainWindow::enregistrer()
           {
              ui->Tab1TextScreen->append("URL saved :");
              ui->Tab1TextScreen->append(r->url().toString());
+             ui->Tab1TextScreen->insertPlainText(CurrentSerie.GetImgFolder());
           }
-
-          ui->Tab1TextScreen->append(CurrentSerie.GetImgFolder());
           downloadNextImage(true);
       }
    }
@@ -756,7 +596,6 @@ void MainWindow::downloadNextImage(bool lastStatus)
    {
       if(QDir(CurrentSerie.GetChapterFolder()).exists() == true)
       {
-         //ajouter un chapitre
          long chapterValue = ui->Tab2StatusTable->item(DownloadSeriesIdx, CHAPTER)->text().toLong();
          chapterValue++;
          QString ChapterTxt;
@@ -766,6 +605,12 @@ void MainWindow::downloadNextImage(bool lastStatus)
          {
             slotTab1PrintPdf(CurrentSerie.GetChapterFolder());
          }
+
+         ui->Tab1TextScreen->append("Chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName() + " store in \"" + CurrentSerie.GetChapterFolder() + "\"");
+      }
+      else
+      {
+         ui->Tab1TextScreen->append("Chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName() + " not found");
       }
 
       DownloadSeriesIdx++;
@@ -774,6 +619,8 @@ void MainWindow::downloadNextImage(bool lastStatus)
          CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
          CurrentSerie.UpdateChapterVal();
 
+         ui->Tab1TextScreen->append("");
+         ui->Tab1TextScreen->append("Searching chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName());
          TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
       }
       else

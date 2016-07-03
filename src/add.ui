@@ -152,6 +152,15 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>TextSeriesName</tabstop>
+  <tabstop>TextURL</tabstop>
+  <tabstop>VolumeValue</tabstop>
+  <tabstop>ChapterValue</tabstop>
+  <tabstop>BoxWeeklyPDF</tabstop>
+  <tabstop>AddOK</tabstop>
+  <tabstop>AddCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

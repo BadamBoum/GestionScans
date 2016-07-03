@@ -148,6 +148,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>TextURL</tabstop>
+  <tabstop>VolumeValue</tabstop>
+  <tabstop>ChapterValue</tabstop>
+  <tabstop>BoxWeeklyPDF</tabstop>
+  <tabstop>OK</tabstop>
+  <tabstop>Cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

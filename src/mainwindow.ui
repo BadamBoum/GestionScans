@@ -87,7 +87,7 @@
      </widget>
      <widget class="QPushButton" name="Tab1PDF">
       <property name="enabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -384,22 +384,51 @@
    <addaction name="menuFichier"/>
   </widget>
   <action name="actionExit_Without_Save">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Exit Without Save</string>
    </property>
   </action>
   <action name="actionExit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
   </action>
   <action name="actionOpen_Database">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Open Database</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>Tab1SelectedSerie</tabstop>
+  <tabstop>Tab1PDF</tabstop>
+  <tabstop>Tab1Delete</tabstop>
+  <tabstop>Tab1SpecificFolder</tabstop>
+  <tabstop>Tab1Setting</tabstop>
+  <tabstop>Tab1SearchOne</tabstop>
+  <tabstop>Tab1AddButton</tabstop>
+  <tabstop>Tab1OpenFolder</tabstop>
+  <tabstop>Tab1Search</tabstop>
+  <tabstop>Tab2StatusTable</tabstop>
+  <tabstop>Tab3AutoSearch</tabstop>
+  <tabstop>ParamDelete</tabstop>
+  <tabstop>DebugBox</tabstop>
+  <tabstop>Tab3ScanFolderText</tabstop>
+  <tabstop>Tab3OpenFold</tabstop>
+  <tabstop>Tab3Save</tabstop>
+  <tabstop>Tab1TextScreen</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

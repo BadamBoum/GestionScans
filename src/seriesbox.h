@@ -10,10 +10,12 @@ public:
    void    SetSeries(QStringList Datas);
    void    UpdateImageVal();
    void    UpdateChapterVal();
+   void    DecreaseChapterVal();
    QString GetSeriesName();
    QString GetChapter();
    QString GetSeriesFolder();
    QString GetChapterFolder();
+   QString GetVolume();
    QString GetImgFolder();
    QString GetURL(int NbOfDigit, QString ExtFile);
    QString GetURL(QString NbOfDigit, QString ExtFile);
@@ -22,6 +24,7 @@ public:
 private:
    QString SeriesName;
    QString ChapterVal;
+   QString VolumeVal;
    QString SeriesFolder;
    QString SeriesURL;
    int     ImageVal;

@@ -12,6 +12,7 @@ void SeriesBox::SetSeries(QStringList Datas)
    ChapterVal   = Datas.at(CHAPTER);
    SeriesFolder = Datas.at(FOLDER);
    SeriesURL    = Datas.at(URL);
+   VolumeVal    = Datas.at(VOLUME);
    ImageVal     = 1;
 }
 
@@ -29,9 +30,23 @@ void SeriesBox::UpdateChapterVal()
    ChapterVal.setNum(value);
 }
 
+void SeriesBox::DecreaseChapterVal()
+{
+   long value = ChapterVal.toLong();
+
+   value--;
+
+   ChapterVal.setNum(value);
+}
+
 QString SeriesBox::GetSeriesName()
 {
    return SeriesName;
+}
+
+QString SeriesBox::GetVolume()
+{
+   return VolumeVal;
 }
 
 QString SeriesBox::GetChapter()

@@ -16,13 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     add.cpp \
     setting.cpp \
-    seriesbox.cpp
+    seriesbox.cpp \
+    pdf.cpp
 
 HEADERS  += mainwindow.h \
     add.h \
     setting.h \
-    seriesbox.h
+    seriesbox.h \
+    pdf.h
 
 FORMS    += mainwindow.ui \
     add.ui \
-    setting.ui
+    setting.ui \
+    pdf.ui
