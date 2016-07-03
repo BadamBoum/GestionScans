@@ -1,6 +1,7 @@
-C:/Users/jlequerl/Documents/Database;AutoSearch=False;Debug=False
-Fairy Tail;489;13.06.2016;57;C:/Users/jlequerl/Documents/Database\Fairy Tail;http://www.lirescan.com/images/lecture-en-ligne/fairy-tail/[Chapter]/[Image].jpg;2;png;false
-Hunter x Hunter;357;09.06.2016;34;C:/Users/jlequerl/Documents/Database\Hunter x Hunter;http://www.lirescan.com/images/lecture-en-ligne/hunter-x-hunter/[Chapter]/[Image].jpg;2;png;false
-Bleach;677;09.06.2016;74;C:/Users/jlequerl/Documents/Database\Bleach;http://www.lirescan.com/images/lecture-en-ligne/bleach/[Chapter]/[Image].jpg;2;png;false
-One Piece;828;02.06.2016;83;C:/Users/jlequerl/Documents/Database\One Piece;http://www.lirescan.com/images/lecture-en-ligne/one-piece/[Chapter]/[Image].jpg;2;png;false
-Attaque des Titans;75;19.06.2016;15;C:/Users/jlequerl/Documents/Database\Attaque des Titans;http://www.lirescan.com/images/lecture-en-ligne/shingeki-no-kyojin/[Chapter]/[Image].jpg;2;png;false
+D:\Documents\Scans;AutoSearch=False;Debug=False
+Fairy Tail;491;13.06.2016;57;D:\Documents\Scans\Fairy Tail;http://www.lirescan.com/images/lecture-en-ligne/fairy-tail/[Chapter]/[Image].jpg;2;png;true
+Hunter x Hunter;360;09.06.2016;34;D:\Documents\Scans\Hunter x Hunter;http://www.lirescan.com/images/lecture-en-ligne/hunter-x-hunter/[Chapter]/[Image].jpg;2;jpg;false
+Bleach;680;09.06.2016;74;D:\Documents\Scans\Bleach;http://www.lirescan.com/images/lecture-en-ligne/bleach/[Chapter]/[Image].jpg;2;png;false
+One Piece;831;02.06.2016;83;D:\Documents\Scans\One Piece;http://www.lirescan.com/images/lecture-en-ligne/one-piece/[Chapter]/[Image].jpg;2;png;false
+Attaque des Titans;79;19.06.2016;15;D:\Documents\Scans\Attaque des Titans;http://www.lirescan.com/images/lecture-en-ligne/shingeki-no-kyojin/[Chapter]/[Image].jpg;2;jpg;false
+Boruto;2;03.07.2016;0;D:\Documents\Scans\Boruto\Boruto;http://www.lirescan.com/images/lecture-en-ligne/boruto/[Chapter]/[Image].jpg;2;jpg;false
