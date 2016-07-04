@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "add.h"
+#include "pdf.h"
 #include "setting.h"
 #include "seriesbox.h"
 
@@ -78,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
    connect(ui->Tab1AddButton, SIGNAL(clicked(bool)), this, SLOT(slotTab1AddButton()));
    connect(ui->Tab1Setting, SIGNAL(clicked(bool)), this, SLOT(slotTab1Setting()));
-   connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1Pdf()));
+//   connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1Pdf()));
    connect(ui->Tab1Search, SIGNAL(clicked(bool)), this, SLOT(slotTab1Search()));
    connect(ui->Tab1Delete, SIGNAL(clicked(bool)), this, SLOT(slotTab1Delete()));
    connect(ui->Tab1SearchOne, SIGNAL(clicked(bool)), this, SLOT(slotTab1SearchOne()));
@@ -144,8 +145,10 @@ MainWindow::~MainWindow()
    delete ui;
 }
 
-void MainWindow::slotTab1PrintPdf(QString Folder)
+void MainWindow::slotTab1PrintPdf()
 {
+    PDF *Pdf = new PDF;
+    Pdf->show();
 }
 
 void MainWindow::slotUpdateFolder()
@@ -603,7 +606,7 @@ void MainWindow::downloadNextImage(bool lastStatus)
          ui->Tab2StatusTable->setItem(DownloadSeriesIdx, CHAPTER, new QTableWidgetItem(ChapterTxt));
          if(ui->Tab2StatusTable->item(DownloadSeriesIdx, WEEKLY)->text() == "true")
          {
-            slotTab1PrintPdf(CurrentSerie.GetChapterFolder());
+            //slotTab1PrintPdf(CurrentSerie.GetChapterFolder());
          }
 
          ui->Tab1TextScreen->append("Chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName() + " store in \"" + CurrentSerie.GetChapterFolder() + "\"");

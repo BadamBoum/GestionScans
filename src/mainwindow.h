@@ -29,7 +29,7 @@ private slots:
     void slotTab1AddButton();
     void slotOpenFolder();
     void slotTab1OpenFolder();
-    void slotTab1PrintPdf(QString Folder);
+    void slotTab1PrintPdf();
     void slotTab1OpenSeriesFolder();
     void AddLineStatusTable(QStringList NewLine);
     void ModifyStatusTable(QStringList NewLine, int Index);

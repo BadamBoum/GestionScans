@@ -16,10 +16,10 @@ public:
    ~PDF();
 
 signals:
-    void PrintSerie(SeriesBox);
+    void PrintSerie(/*SeriesBox*/);
 
 public slots:
-    void FillPdfWindow(SeriesBox Datas);
+    void FillPdfWindow(/*SeriesBox Datas*/);
 
 private slots:
     void slotPrintButton();
