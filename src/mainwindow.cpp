@@ -511,7 +511,20 @@ void MainWindow::enregistrer()
           QString ImgName = CurrentSerie.GetImgFolder();
 
           ImgName.remove(ImgName.size() - 3, 3);
-          ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+          //ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+
+          QByteArray Type = r->read(3);
+
+          if (  ((unsigned char)Type.at(0) == 0xFF)
+             && ((unsigned char)Type.at(1) == 0xD8)
+             && ((unsigned char)Type.at(2) == 0xFF))
+          {
+              ImgName += ".jpg";
+          }
+          else
+          {
+              ImgName += ".png";
+          }
 
           QFile f(ImgName);
 
