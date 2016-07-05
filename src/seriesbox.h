@@ -9,6 +9,7 @@ public:
    SeriesBox();
    void    SetSeries(QStringList Datas);
    void    UpdateImageVal();
+   void    DecreaseImageVal();
    void    UpdateChapterVal();
    void    DecreaseChapterVal();
    QString GetSeriesName();

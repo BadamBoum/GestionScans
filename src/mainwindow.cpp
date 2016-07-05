@@ -305,12 +305,16 @@ void MainWindow::slotTab1Search()
    NumberOfSeriesSearch = ui->Tab2StatusTable->rowCount();
    CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
    CurrentSerie.UpdateChapterVal();
+   CurrentStatus.ExtJpg1   = false;
    CurrentStatus.ExtJpg2   = false;
    CurrentStatus.ExtJpg3   = false;
    CurrentStatus.ExtJpg4   = false;
+   CurrentStatus.ExtPng1   = false;
    CurrentStatus.ExtPng2   = false;
    CurrentStatus.ExtPng3   = false;
    CurrentStatus.ExtPng4   = false;
+   CurrentStatus.Double    = false;
+   CurrentStatus.Np1       = false;
    CurrentStatus.SearchURL = false;
 
    ui->Tab1TextScreen->append("Searching chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName());
@@ -327,12 +331,16 @@ void MainWindow::slotTab1SearchOne()
    NumberOfSeriesSearch = 1;
    CurrentSerie.SetSeries(GetLineInfos(DownloadSeriesIdx));
    CurrentSerie.UpdateChapterVal();
+   CurrentStatus.ExtJpg1   = false;
    CurrentStatus.ExtJpg2   = false;
    CurrentStatus.ExtJpg3   = false;
    CurrentStatus.ExtJpg4   = false;
+   CurrentStatus.ExtPng1   = false;
    CurrentStatus.ExtPng2   = false;
    CurrentStatus.ExtPng3   = false;
    CurrentStatus.ExtPng4   = false;
+   CurrentStatus.Double    = false;
+   CurrentStatus.Np1       = false;
    CurrentStatus.SearchURL = false;
 
    ui->Tab1TextScreen->append("Searching chapter " + CurrentSerie.GetChapter() + " of " + CurrentSerie.GetSeriesName());
@@ -392,7 +400,22 @@ void MainWindow::enregistrer()
          {
             ui->Tab1TextScreen->append("New Type of URL founded");
          }
-         if (CurrentStatus.ExtPng4 == true)
+
+         if (CurrentStatus.Np1 == true)
+         {
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("Image Skip");
+            }
+         }
+         else if (CurrentStatus.Double == true)
+         {
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("Double Image");
+            }
+         }
+         else if (CurrentStatus.ExtPng4 == true)
          {
             ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
             ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
@@ -420,6 +443,16 @@ void MainWindow::enregistrer()
             if(ui->DebugBox->isChecked())
             {
                ui->Tab1TextScreen->append("2 Digit / png");
+            }
+         }
+         else if (CurrentStatus.ExtPng1 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("1 Digit / png");
             }
          }
          else if (CurrentStatus.ExtJpg4 == true)
@@ -452,6 +485,16 @@ void MainWindow::enregistrer()
                ui->Tab1TextScreen->append("2 Digit / jpg");
             }
          }
+         else if (CurrentStatus.ExtJpg1 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("1 Digit / jpg");
+            }
+         }
          else
          {
             if(ui->DebugBox->isChecked())
@@ -460,12 +503,16 @@ void MainWindow::enregistrer()
             }
          }
 
+         CurrentStatus.ExtJpg1   = false;
          CurrentStatus.ExtJpg2   = false;
          CurrentStatus.ExtJpg3   = false;
          CurrentStatus.ExtJpg4   = false;
+         CurrentStatus.ExtPng1   = false;
          CurrentStatus.ExtPng2   = false;
          CurrentStatus.ExtPng3   = false;
          CurrentStatus.ExtPng4   = false;
+         CurrentStatus.Double    = false;
+         CurrentStatus.Np1       = false;
          CurrentStatus.SearchURL = false;
       }
 
@@ -511,26 +558,24 @@ void MainWindow::enregistrer()
           QString ImgName = CurrentSerie.GetImgFolder();
 
           ImgName.remove(ImgName.size() - 3, 3);
-          //ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
-
-          QByteArray Type = r->read(3);
-
-          if (  ((unsigned char)Type.at(0) == 0xFF)
-             && ((unsigned char)Type.at(1) == 0xD8)
-             && ((unsigned char)Type.at(2) == 0xFF))
+//          ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+          QByteArray DatafileContent = r->readAll();
+          if (  ((unsigned char)DatafileContent.at(0) == 0xFF)
+             && ((unsigned char)DatafileContent.at(1) == 0xD8)
+             && ((unsigned char)DatafileContent.at(2) == 0xFF))
           {
-              ImgName += ".jpg";
+              ImgName += "jpg";
           }
           else
           {
-              ImgName += ".png";
+              ImgName += "png";
           }
 
           QFile f(ImgName);
 
           if (f.open(QIODevice::WriteOnly))
           {
-             f.write(r->readAll());
+             f.write(DatafileContent);
              f.close();
              r->deleteLater();
           }
@@ -539,7 +584,7 @@ void MainWindow::enregistrer()
           {
              ui->Tab1TextScreen->append("URL saved :");
              ui->Tab1TextScreen->append(r->url().toString());
-             ui->Tab1TextScreen->insertPlainText(CurrentSerie.GetImgFolder());
+             ui->Tab1TextScreen->append(CurrentSerie.GetImgFolder());
           }
           downloadNextImage(true);
       }
@@ -563,6 +608,11 @@ void MainWindow::enregistrer()
          CurrentStatus.ExtJpg4 = true;
          TestUrl(CurrentSerie.GetURL(4, "jpg"));
       }
+      else if (CurrentStatus.ExtJpg1 == false)
+      {
+         CurrentStatus.ExtJpg1 = true;
+         TestUrl(CurrentSerie.GetURL(1, "jpg"));
+      }
       else if (CurrentStatus.ExtPng2 == false)
       {
          CurrentStatus.ExtPng2 = true;
@@ -578,6 +628,25 @@ void MainWindow::enregistrer()
          CurrentStatus.ExtPng4 = true;
          TestUrl(CurrentSerie.GetURL(4, "png"));
       }
+      else if (CurrentStatus.ExtPng1 == false)
+      {
+         CurrentStatus.ExtPng1 = true;
+         TestUrl(CurrentSerie.GetURL(1, "png"));
+      }
+      else if (CurrentStatus.Double == false)
+      {
+         CurrentStatus.Double = true;
+         QString DoubleUrl = CurrentSerie.GetURL(2, "");
+         DoubleUrl.remove(DoubleUrl.size() - 1, 1);
+         CurrentSerie.UpdateImageVal();
+         DoubleUrl += "-" + CurrentSerie.GetURL(2, "").remove(0, CurrentSerie.GetURL(2, "").size() - 3) + ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+         TestUrl(DoubleUrl);
+      }
+      else if (CurrentStatus.Np1 == false)
+      {
+          CurrentStatus.Np1 = true;
+          TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
+      }
       else
       {
          if(ui->DebugBox->isChecked())
@@ -585,12 +654,16 @@ void MainWindow::enregistrer()
             ui->Tab1TextScreen->append("URL not found");
          }
 
+         CurrentStatus.ExtJpg1   = false;
          CurrentStatus.ExtJpg2   = false;
          CurrentStatus.ExtJpg3   = false;
          CurrentStatus.ExtJpg4   = false;
+         CurrentStatus.ExtPng1   = false;
          CurrentStatus.ExtPng2   = false;
          CurrentStatus.ExtPng3   = false;
          CurrentStatus.ExtPng4   = false;
+         CurrentStatus.Double    = false;
+         CurrentStatus.Np1       = false;
          CurrentStatus.SearchURL = false;
          downloadNextImage(false);
       }
@@ -643,6 +716,14 @@ void MainWindow::downloadNextImage(bool lastStatus)
       {
          ui->Tab1TextScreen->append("");
          ui->Tab1TextScreen->append("***Search ended***");
+
+         if ((NumberOfSeriesSearch == 1) && (ui->LoopSearch->isChecked()))
+         {
+             if(QDir(CurrentSerie.GetChapterFolder()).exists() == true)
+             {
+                 slotTab1SearchOne();
+             }
+         }
       }
    }
 }

@@ -21,6 +21,11 @@ void SeriesBox::UpdateImageVal()
    ImageVal++;
 }
 
+void SeriesBox::DecreaseImageVal()
+{
+   ImageVal--;
+}
+
 void SeriesBox::UpdateChapterVal()
 {
    long value = ChapterVal.toLong();

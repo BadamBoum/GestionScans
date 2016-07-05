@@ -55,12 +55,16 @@ private:
 
     struct TestType
     {
+       bool ExtJpg1 = false;
        bool ExtJpg2 = false;
        bool ExtJpg3 = false;
        bool ExtJpg4 = false;
+       bool ExtPng1 = false;
        bool ExtPng2 = false;
        bool ExtPng3 = false;
        bool ExtPng4 = false;
+       bool Double  = false;
+       bool Np1     = false;
        bool SearchURL = false;
     };
 

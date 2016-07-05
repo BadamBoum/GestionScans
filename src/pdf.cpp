@@ -195,9 +195,12 @@ void PDF::slotPrintButton()
 
 void PDF::slotCancelButton()
 {
-    QString imagePath = "C:/Users/jlequerl/Desktop/01.jpg";
+    QFile Datafile("D:/Documents/Scans/Fairy Tail/490/490_01.png");
+    Datafile.open(QIODevice::ReadWrite);
+    QByteArray DatafileContent = Datafile.read(128);
+    QString imagePath = "D:/Documents/Scans/Fairy Tail/490/490_01.png";
     //QString imagePath = "./jpeg-home.jpg";
-    QPdfWriter pdfWriter("C:/Users/jlequerl/Documents/Database/test.pdf");
+    QPdfWriter pdfWriter("D:/Documents/Scans/test.pdf");
     pdfWriter.setPageSize(QPagedPaintDevice::A4);
     const qreal horizontalMarginMM = 10.0;     // 10 mm margin on each side
     const qreal verticalMarginMM = 10.0;
