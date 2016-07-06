@@ -87,7 +87,7 @@
      </widget>
      <widget class="QPushButton" name="Tab1PDF">
       <property name="enabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -193,6 +193,9 @@
       </property>
      </widget>
      <widget class="QCheckBox" name="Overwrite">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -206,6 +209,9 @@
       </property>
      </widget>
      <widget class="QPushButton" name="Tab1Stop">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>100</x>

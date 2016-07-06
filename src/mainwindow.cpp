@@ -415,6 +415,16 @@ void MainWindow::enregistrer()
                ui->Tab1TextScreen->append("Double Image");
             }
          }
+         else if (CurrentStatus.ExtPng1 == true)
+         {
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+            if(ui->DebugBox->isChecked())
+            {
+               ui->Tab1TextScreen->append("1 Digit / png");
+            }
+         }
          else if (CurrentStatus.ExtPng4 == true)
          {
             ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
@@ -445,14 +455,14 @@ void MainWindow::enregistrer()
                ui->Tab1TextScreen->append("2 Digit / png");
             }
          }
-         else if (CurrentStatus.ExtPng1 == true)
+         else if (CurrentStatus.ExtJpg1 == true)
          {
             ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
 
             if(ui->DebugBox->isChecked())
             {
-               ui->Tab1TextScreen->append("1 Digit / png");
+               ui->Tab1TextScreen->append("1 Digit / jpg");
             }
          }
          else if (CurrentStatus.ExtJpg4 == true)
@@ -483,16 +493,6 @@ void MainWindow::enregistrer()
             if(ui->DebugBox->isChecked())
             {
                ui->Tab1TextScreen->append("2 Digit / jpg");
-            }
-         }
-         else if (CurrentStatus.ExtJpg1 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("1 Digit / jpg");
             }
          }
          else
