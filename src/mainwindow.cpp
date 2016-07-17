@@ -79,7 +79,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
    connect(ui->Tab1AddButton, SIGNAL(clicked(bool)), this, SLOT(slotTab1AddButton()));
    connect(ui->Tab1Setting, SIGNAL(clicked(bool)), this, SLOT(slotTab1Setting()));
-//   connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1Pdf()));
    connect(ui->Tab1Search, SIGNAL(clicked(bool)), this, SLOT(slotTab1Search()));
    connect(ui->Tab1Delete, SIGNAL(clicked(bool)), this, SLOT(slotTab1Delete()));
    connect(ui->Tab1SearchOne, SIGNAL(clicked(bool)), this, SLOT(slotTab1SearchOne()));
@@ -88,59 +87,62 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(ui->Tab1PDF, SIGNAL(clicked(bool)), this, SLOT(slotTab1PrintPdf()));
    connect(ui->Tab3Save, SIGNAL(clicked(bool)), this, SLOT(slotUpdateFolder()));
    connect(ui->Tab3OpenFold, SIGNAL(clicked(bool)), this, SLOT(slotOpenFolder()));
+   connect(ui->Tab1Stop, SIGNAL(clicked(bool)), this, SLOT(slotStop()));
+   connect(ui->actionExit, SIGNAL(triggered(bool)), this, SLOT(slotSavCloseWindows()));
+   connect(ui->actionExit_Without_Save, SIGNAL(triggered(bool)), this, SLOT(slotCloseWindows()));
 
    if (ui->Tab3AutoSearch->isChecked()) slotTab1Search();
 }
 
 MainWindow::~MainWindow()
 {
-   QFile Datafile("datafile.txt");
-   Datafile.open(QIODevice::WriteOnly);
-   QTextStream out(&Datafile);
-   QString temp;
+//   QFile Datafile("datafile.txt");
+//   Datafile.open(QIODevice::WriteOnly);
+//   QTextStream out(&Datafile);
+//   QString temp;
 
-   temp.append(ui->Tab3ScanFolderText->text());
-   temp.append( ";" );
-   if (ui->Tab3AutoSearch->isChecked())
-   {
-       temp.append( "AutoSearch=True" );
-   }
-   else
-   {
-       temp.append( "AutoSearch=False" );
-   }
-   temp.append( ";" );
-   if (ui->DebugBox->isChecked())
-   {
-       temp.append( "Debug=True" );
-   }
-   else
-   {
-       temp.append( "Debug=False" );
-   }
-   temp.append( "\n" );
+//   temp.append(ui->Tab3ScanFolderText->text());
+//   temp.append( ";" );
+//   if (ui->Tab3AutoSearch->isChecked())
+//   {
+//       temp.append( "AutoSearch=True" );
+//   }
+//   else
+//   {
+//       temp.append( "AutoSearch=False" );
+//   }
+//   temp.append( ";" );
+//   if (ui->DebugBox->isChecked())
+//   {
+//       temp.append( "Debug=True" );
+//   }
+//   else
+//   {
+//       temp.append( "Debug=False" );
+//   }
+//   temp.append( "\n" );
 
-   for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
-   {
-      for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
-      {
-         temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
+//   for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
+//   {
+//      for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
+//      {
+//         temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
 
-         if (j < ui->Tab2StatusTable->columnCount() - 1)
-         {
-             temp.append( ";" );
-         }
-      }
-      if (i < ui->Tab2StatusTable->rowCount() - 1)
-      {
-          temp.append( "\n" );
-      }
-   }
+//         if (j < ui->Tab2StatusTable->columnCount() - 1)
+//         {
+//             temp.append( ";" );
+//         }
+//      }
+//      if (i < ui->Tab2StatusTable->rowCount() - 1)
+//      {
+//          temp.append( "\n" );
+//      }
+//   }
 
-   out << temp;
-   out.flush();
-   Datafile.flush();
-   Datafile.close();
+//   out << temp;
+//   out.flush();
+//   Datafile.flush();
+//   Datafile.close();
 
    delete ui;
 }
@@ -148,7 +150,25 @@ MainWindow::~MainWindow()
 void MainWindow::slotTab1PrintPdf()
 {
     PDF *Pdf = new PDF;
+
+    CurrentSerie.SetSeries(GetLineInfos(ui->Tab1SelectedSerie->currentIndex()));
+
+    connect(this, SIGNAL(SeriesBoxInfo(QStringList, int)), Pdf, SLOT(FillPdfWindow(QStringList, int)));
+    emit SeriesBoxInfo(GetLineInfos(ui->Tab1SelectedSerie->currentIndex()), ui->Tab1SelectedSerie->currentIndex());
+
     Pdf->show();
+
+    connect(Pdf, SIGNAL(UpdateVolume(int)), this, SLOT(ModifyVolume(int)));
+}
+
+void MainWindow::ModifyVolume(int Idx)
+{
+    ui->Tab1TextScreen->append("Print in " + ui->Tab2StatusTable->item(Idx, NAME)->text() + " Tome " + ui->Tab2StatusTable->item(Idx, VOLUME)->text() + ".pdf");
+    int volumeLoc = ui->Tab2StatusTable->item(Idx, VOLUME)->text().toInt();
+    volumeLoc++;
+    QString volumeTxt;
+    volumeTxt.setNum(volumeLoc);
+    ui->Tab2StatusTable->setItem(Idx, VOLUME, new QTableWidgetItem(volumeTxt));
 }
 
 void MainWindow::slotUpdateFolder()
@@ -180,6 +200,69 @@ void MainWindow::slotTab1AddButton()
 void MainWindow::slotOpenFolder()
 {
     ui->Tab3ScanFolderText->setText(QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly));
+}
+
+void MainWindow::slotStop()
+{
+    ended = true;
+}
+
+void MainWindow::slotCloseWindows()
+{
+    this->~MainWindow();
+}
+
+void MainWindow::slotSavCloseWindows()
+{
+    QFile Datafile("datafile.txt");
+    Datafile.open(QIODevice::WriteOnly);
+    QTextStream out(&Datafile);
+    QString temp;
+
+    temp.append(ui->Tab3ScanFolderText->text());
+    temp.append( ";" );
+    if (ui->Tab3AutoSearch->isChecked())
+    {
+        temp.append( "AutoSearch=True" );
+    }
+    else
+    {
+        temp.append( "AutoSearch=False" );
+    }
+    temp.append( ";" );
+    if (ui->DebugBox->isChecked())
+    {
+        temp.append( "Debug=True" );
+    }
+    else
+    {
+        temp.append( "Debug=False" );
+    }
+    temp.append( "\n" );
+
+    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
+    {
+       for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
+       {
+          temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
+
+          if (j < ui->Tab2StatusTable->columnCount() - 1)
+          {
+              temp.append( ";" );
+          }
+       }
+       if (i < ui->Tab2StatusTable->rowCount() - 1)
+       {
+           temp.append( "\n" );
+       }
+    }
+
+    out << temp;
+    out.flush();
+    Datafile.flush();
+    Datafile.close();
+
+    this->~MainWindow();
 }
 
 void MainWindow::slotTab1OpenFolder()
@@ -281,20 +364,6 @@ void MainWindow::slotTab1Delete()
    ui->Tab1SelectedSerie->removeItem(ui->Tab1SelectedSerie->currentIndex());
 }
 
-void MainWindow::slotTab1Pdf()
-{
-   ui->Tab1TextScreen->append("PDF");
-   //    QPrinter printer;
-
-   //    QPrintDialog *dialog = new QPrintDialog(&printer, this);
-   //    dialog->setWindowTitle(tr("Print Document"));
-   //    if (editor->textCursor().hasSelection())
-   //        dialog->addEnabledOption(QAbstractPrintDialog::PrintSelection);
-   //    if (dialog->exec() != QDialog::Accepted)
-   //        return;
-   //    IndexOf(Tab1ListOfManga).ligneSplitee.at(3)++;
-}
-
 void MainWindow::slotTab1Search()
 {
    ui->Tab1TextScreen->append("");
@@ -347,18 +416,20 @@ void MainWindow::slotTab1SearchOne()
    TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
 }
 
-void MainWindow::TestUrl(QUrl url)
+void MainWindow::TestUrl(QString urlstr)
 {
    erreurTrouvee = false;
 
-   QNetworkRequest requete(url);
+   QUrl Url;
+   Url.setUrl(urlstr);
+   QNetworkRequest requete(Url);
    QNetworkAccessManager *m = new QNetworkAccessManager;
    QNetworkReply *r = m->get(requete);
 
    if(ui->DebugBox->isChecked())
    {
       ui->Tab1TextScreen->append("URL tested :");
-      ui->Tab1TextScreen->append(url.toString());
+      ui->Tab1TextScreen->append(urlstr);
    }
 
    connect(r, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(messageErreur(QNetworkReply::NetworkError)));
@@ -386,289 +457,298 @@ void MainWindow::messageErreur(QNetworkReply::NetworkError)
 
 void MainWindow::enregistrer()
 {
-   if(ui->DebugBox->isChecked())
+   if (ended == true)
    {
-      ui->Tab1TextScreen->append("");
-      ui->Tab1TextScreen->append("***Save Slot***");
-   }
-
-   if(!erreurTrouvee)
-   {
-      if (CurrentStatus.SearchURL == true)
-      {
-         if(ui->DebugBox->isChecked())
-         {
-            ui->Tab1TextScreen->append("New Type of URL founded");
-         }
-
-         if (CurrentStatus.Np1 == true)
-         {
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("Image Skip");
-            }
-         }
-         else if (CurrentStatus.Double == true)
-         {
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("Double Image");
-            }
-         }
-         else if (CurrentStatus.ExtPng1 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("1 Digit / png");
-            }
-         }
-         else if (CurrentStatus.ExtPng4 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("4 Digit / png");
-            }
-         }
-         else if (CurrentStatus.ExtPng3 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("3 Digit / png");
-            }
-         }
-         else if (CurrentStatus.ExtPng2 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("2 Digit / png");
-            }
-         }
-         else if (CurrentStatus.ExtJpg1 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("1 Digit / jpg");
-            }
-         }
-         else if (CurrentStatus.ExtJpg4 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("4 Digit / jpg");
-            }
-         }
-         else if (CurrentStatus.ExtJpg3 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("3 Digit / jpg");
-            }
-         }
-         else if (CurrentStatus.ExtJpg2 == true)
-         {
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
-            ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
-
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("2 Digit / jpg");
-            }
-         }
-         else
-         {
-            if(ui->DebugBox->isChecked())
-            {
-               ui->Tab1TextScreen->append("Error when search new URL type");
-            }
-         }
-
-         CurrentStatus.ExtJpg1   = false;
-         CurrentStatus.ExtJpg2   = false;
-         CurrentStatus.ExtJpg3   = false;
-         CurrentStatus.ExtJpg4   = false;
-         CurrentStatus.ExtPng1   = false;
-         CurrentStatus.ExtPng2   = false;
-         CurrentStatus.ExtPng3   = false;
-         CurrentStatus.ExtPng4   = false;
-         CurrentStatus.Double    = false;
-         CurrentStatus.Np1       = false;
-         CurrentStatus.SearchURL = false;
-      }
-
-      QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
-      bool FolderExist = true;
-
-      if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
-      {
-         QDir().mkdir(CurrentSerie.GetSeriesFolder());
-
-         if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
-         {
-             ui->Tab1TextScreen->append("Error. Can't create new Folder");
-             FolderExist = false;
-         }
-         else
-         {
-             ui->Tab1TextScreen->append("");
-             ui->Tab1TextScreen->append("CreateFolder :");
-             ui->Tab1TextScreen->append(CurrentSerie.GetSeriesFolder());
-         }
-      }
-
-      if(QDir(CurrentSerie.GetChapterFolder()).exists() == false)
-      {
-         QDir().mkdir(CurrentSerie.GetChapterFolder());
-
-         if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
-         {
-             ui->Tab1TextScreen->append("Error. Can't create new Folder");
-             FolderExist = false;
-         }
-         else
-         {
-             ui->Tab1TextScreen->append("");
-             ui->Tab1TextScreen->append("CreateFolder :");
-             ui->Tab1TextScreen->append(CurrentSerie.GetChapterFolder());
-         }
-      }
-
-      if (FolderExist == true)
-      {
-          QString ImgName = CurrentSerie.GetImgFolder();
-
-          ImgName.remove(ImgName.size() - 3, 3);
-//          ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
-          QByteArray DatafileContent = r->readAll();
-          if (  ((unsigned char)DatafileContent.at(0) == 0xFF)
-             && ((unsigned char)DatafileContent.at(1) == 0xD8)
-             && ((unsigned char)DatafileContent.at(2) == 0xFF))
-          {
-              ImgName += "jpg";
-          }
-          else
-          {
-              ImgName += "png";
-          }
-
-          QFile f(ImgName);
-
-          if (f.open(QIODevice::WriteOnly))
-          {
-             f.write(DatafileContent);
-             f.close();
-             r->deleteLater();
-          }
-
-          if(ui->DebugBox->isChecked())
-          {
-             ui->Tab1TextScreen->append("URL saved :");
-             ui->Tab1TextScreen->append(r->url().toString());
-             ui->Tab1TextScreen->append(CurrentSerie.GetImgFolder());
-          }
-          downloadNextImage(true);
-      }
+       ended = false;
+       ui->Tab1TextScreen->append("");
+       ui->Tab1TextScreen->append("***Search stop***");
    }
    else
    {
-      CurrentStatus.SearchURL = true;
+       if(ui->DebugBox->isChecked())
+       {
+          ui->Tab1TextScreen->append("");
+          ui->Tab1TextScreen->append("***Save Slot***");
+       }
 
-      if (CurrentStatus.ExtJpg2 == false)
-      {
-         CurrentStatus.ExtJpg2 = true;
-         TestUrl(CurrentSerie.GetURL(2, "jpg"));
-      }
-      else if (CurrentStatus.ExtJpg3 == false)
-      {
-         CurrentStatus.ExtJpg3 = true;
-         TestUrl(CurrentSerie.GetURL(3, "jpg"));
-      }
-      else if (CurrentStatus.ExtJpg4 == false)
-      {
-         CurrentStatus.ExtJpg4 = true;
-         TestUrl(CurrentSerie.GetURL(4, "jpg"));
-      }
-      else if (CurrentStatus.ExtJpg1 == false)
-      {
-         CurrentStatus.ExtJpg1 = true;
-         TestUrl(CurrentSerie.GetURL(1, "jpg"));
-      }
-      else if (CurrentStatus.ExtPng2 == false)
-      {
-         CurrentStatus.ExtPng2 = true;
-         TestUrl(CurrentSerie.GetURL(2, "png"));
-      }
-      else if (CurrentStatus.ExtPng3 == false)
-      {
-         CurrentStatus.ExtPng3 = true;
-         TestUrl(CurrentSerie.GetURL(3, "png"));
-      }
-      else if (CurrentStatus.ExtPng4 == false)
-      {
-         CurrentStatus.ExtPng4 = true;
-         TestUrl(CurrentSerie.GetURL(4, "png"));
-      }
-      else if (CurrentStatus.ExtPng1 == false)
-      {
-         CurrentStatus.ExtPng1 = true;
-         TestUrl(CurrentSerie.GetURL(1, "png"));
-      }
-      else if (CurrentStatus.Double == false)
-      {
-         CurrentStatus.Double = true;
-         QString DoubleUrl = CurrentSerie.GetURL(2, "");
-         DoubleUrl.remove(DoubleUrl.size() - 1, 1);
-         CurrentSerie.UpdateImageVal();
-         DoubleUrl += "-" + CurrentSerie.GetURL(2, "").remove(0, CurrentSerie.GetURL(2, "").size() - 3) + ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
-         TestUrl(DoubleUrl);
-      }
-      else if (CurrentStatus.Np1 == false)
-      {
-          CurrentStatus.Np1 = true;
-          TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
-      }
-      else
-      {
-         if(ui->DebugBox->isChecked())
-         {
-            ui->Tab1TextScreen->append("URL not found");
-         }
+       if(!erreurTrouvee)//(Test == "No Error")//
+       {
+          if (CurrentStatus.SearchURL == true)
+          {
+             if(ui->DebugBox->isChecked())
+             {
+                ui->Tab1TextScreen->append("New Type of URL founded");
+             }
 
-         CurrentStatus.ExtJpg1   = false;
-         CurrentStatus.ExtJpg2   = false;
-         CurrentStatus.ExtJpg3   = false;
-         CurrentStatus.ExtJpg4   = false;
-         CurrentStatus.ExtPng1   = false;
-         CurrentStatus.ExtPng2   = false;
-         CurrentStatus.ExtPng3   = false;
-         CurrentStatus.ExtPng4   = false;
-         CurrentStatus.Double    = false;
-         CurrentStatus.Np1       = false;
-         CurrentStatus.SearchURL = false;
-         downloadNextImage(false);
-      }
+             if (CurrentStatus.Np1 == true)
+             {
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("Image Skip");
+                }
+             }
+             else if (CurrentStatus.Double == true)
+             {
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("Double Image");
+                }
+             }
+             else if (CurrentStatus.ExtPng4 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("4 Digit / png");
+                }
+             }
+             else if (CurrentStatus.ExtPng3 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("3 Digit / png");
+                }
+             }
+             else if (CurrentStatus.ExtPng2 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("2 Digit / png");
+                }
+             }
+             else if (CurrentStatus.ExtPng1 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("1 Digit / png");
+                }
+             }
+             else if (CurrentStatus.ExtJpg4 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("4 Digit / jpg");
+                }
+             }
+             else if (CurrentStatus.ExtJpg3 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("3 Digit / jpg");
+                }
+             }
+             else if (CurrentStatus.ExtJpg2 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("2 Digit / jpg");
+                }
+             }
+             else if (CurrentStatus.ExtJpg1 == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("1 Digit / jpg");
+                }
+             }
+             else
+             {
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("Error when search new URL type");
+                }
+             }
+
+             CurrentStatus.ExtJpg1   = false;
+             CurrentStatus.ExtJpg2   = false;
+             CurrentStatus.ExtJpg3   = false;
+             CurrentStatus.ExtJpg4   = false;
+             CurrentStatus.ExtPng1   = false;
+             CurrentStatus.ExtPng2   = false;
+             CurrentStatus.ExtPng3   = false;
+             CurrentStatus.ExtPng4   = false;
+             CurrentStatus.Double    = false;
+             CurrentStatus.Np1       = false;
+             CurrentStatus.SearchURL = false;
+          }
+
+          bool FolderExist = true;
+
+          if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
+          {
+             QDir().mkdir(CurrentSerie.GetSeriesFolder());
+
+             if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
+             {
+                 ui->Tab1TextScreen->append("Error. Can't create new Folder");
+                 FolderExist = false;
+             }
+             else
+             {
+                 ui->Tab1TextScreen->append("");
+                 ui->Tab1TextScreen->append("CreateFolder :");
+                 ui->Tab1TextScreen->append(CurrentSerie.GetSeriesFolder());
+             }
+          }
+
+          if(QDir(CurrentSerie.GetChapterFolder()).exists() == false)
+          {
+             QDir().mkdir(CurrentSerie.GetChapterFolder());
+
+             if(QDir(CurrentSerie.GetSeriesFolder()).exists() == false)
+             {
+                 ui->Tab1TextScreen->append("Error. Can't create new Folder");
+                 FolderExist = false;
+             }
+             else
+             {
+                 ui->Tab1TextScreen->append("");
+                 ui->Tab1TextScreen->append("CreateFolder :");
+                 ui->Tab1TextScreen->append(CurrentSerie.GetChapterFolder());
+             }
+          }
+
+          if (FolderExist == true)
+          {
+              QString ImgName = CurrentSerie.GetImgFolder();
+
+              ImgName.remove(ImgName.size() - 3, 3);
+    //          ImgName += ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+              QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
+              QByteArray DatafileContent = r->readAll();
+              if (  ((unsigned char)DatafileContent.at(0) == 0xFF)
+                 && ((unsigned char)DatafileContent.at(1) == 0xD8)
+                 && ((unsigned char)DatafileContent.at(2) == 0xFF))
+              {
+                  ImgName += "jpg";
+              }
+              else
+              {
+                  ImgName += "png";
+              }
+
+              QFile f(ImgName);
+
+              if (f.open(QIODevice::WriteOnly))
+              {
+                 f.write(DatafileContent);
+                 f.close();
+                 r->deleteLater();
+              }
+
+              if(ui->DebugBox->isChecked())
+              {
+                 ui->Tab1TextScreen->append("URL saved :");
+                 ui->Tab1TextScreen->append(r->url().toString());
+                 ui->Tab1TextScreen->append(CurrentSerie.GetImgFolder());
+              }
+              downloadNextImage(true);
+          }
+       }
+       else
+       {
+          CurrentStatus.SearchURL = true;
+
+          if (CurrentStatus.ExtJpg2 == false)
+          {
+             CurrentStatus.ExtJpg2 = true;
+             TestUrl(CurrentSerie.GetURL(2, "jpg"));
+          }
+          else if (CurrentStatus.ExtJpg3 == false)
+          {
+             CurrentStatus.ExtJpg3 = true;
+             TestUrl(CurrentSerie.GetURL(3, "jpg"));
+          }
+          else if (CurrentStatus.ExtJpg4 == false)
+          {
+             CurrentStatus.ExtJpg4 = true;
+             TestUrl(CurrentSerie.GetURL(4, "jpg"));
+          }
+          else if (CurrentStatus.ExtJpg1 == false)
+          {
+             CurrentStatus.ExtJpg1 = true;
+             TestUrl(CurrentSerie.GetURL(1, "jpg"));
+          }
+          else if (CurrentStatus.ExtPng2 == false)
+          {
+             CurrentStatus.ExtPng2 = true;
+             TestUrl(CurrentSerie.GetURL(2, "png"));
+          }
+          else if (CurrentStatus.ExtPng3 == false)
+          {
+             CurrentStatus.ExtPng3 = true;
+             TestUrl(CurrentSerie.GetURL(3, "png"));
+          }
+          else if (CurrentStatus.ExtPng4 == false)
+          {
+             CurrentStatus.ExtPng4 = true;
+             TestUrl(CurrentSerie.GetURL(4, "png"));
+          }
+          else if (CurrentStatus.ExtPng1 == false)
+          {
+             CurrentStatus.ExtPng1 = true;
+             TestUrl(CurrentSerie.GetURL(1, "png"));
+          }
+          else if (CurrentStatus.Double == false)
+          {
+             CurrentStatus.Double = true;
+             QString DoubleUrl = CurrentSerie.GetURL(2, "");
+             DoubleUrl.remove(DoubleUrl.size() - 1, 1);
+             CurrentSerie.UpdateImageVal();
+             DoubleUrl += "-" + CurrentSerie.GetURL(2, "").remove(0, CurrentSerie.GetURL(2, "").size() - 3) + ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+             TestUrl(DoubleUrl);
+          }
+          else if (CurrentStatus.Np1 == false)
+          {
+              CurrentStatus.Np1 = true;
+              TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));
+          }
+          else
+          {
+             if(ui->DebugBox->isChecked())
+             {
+                ui->Tab1TextScreen->append("URL not found");
+             }
+
+             CurrentStatus.ExtJpg1   = false;
+             CurrentStatus.ExtJpg2   = false;
+             CurrentStatus.ExtJpg3   = false;
+             CurrentStatus.ExtJpg4   = false;
+             CurrentStatus.ExtPng1   = false;
+             CurrentStatus.ExtPng2   = false;
+             CurrentStatus.ExtPng3   = false;
+             CurrentStatus.ExtPng4   = false;
+             CurrentStatus.Double    = false;
+             CurrentStatus.Np1       = false;
+             CurrentStatus.SearchURL = false;
+             CurrentSerie.DecreaseImageVal();
+             downloadNextImage(false);
+          }
+       }
    }
-
    erreurTrouvee = false;
 }
 

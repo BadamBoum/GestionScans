@@ -16,6 +16,16 @@ void SeriesBox::SetSeries(QStringList Datas)
    ImageVal     = 1;
 }
 
+void SeriesBox::SetVolume(int vol)
+{
+   VolumeVal.setNum(vol);
+}
+
+void SeriesBox::SetChapter(int chapt)
+{
+   ChapterVal.setNum(chapt);
+}
+
 void SeriesBox::UpdateImageVal()
 {
    ImageVal++;

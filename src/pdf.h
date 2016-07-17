@@ -2,6 +2,7 @@
 #define PDF_H
 
 #include <QWidget>
+#include "seriesbox.h"
 
 namespace Ui {
 class PDF;
@@ -17,9 +18,10 @@ public:
 
 signals:
     void PrintSerie(/*SeriesBox*/);
+    void UpdateVolume(int);
 
 public slots:
-    void FillPdfWindow(/*SeriesBox Datas*/);
+    void FillPdfWindow(QStringList Datas, int Index);
 
 private slots:
     void slotPrintButton();
@@ -27,6 +29,8 @@ private slots:
 
 private:
    Ui::PDF *ui;
+   SeriesBox SeriesInfos;
+   int CurrentIdx = 0;
 };
 
 #endif // PDF_H

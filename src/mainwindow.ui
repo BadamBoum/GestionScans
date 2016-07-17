@@ -87,7 +87,7 @@
      </widget>
      <widget class="QPushButton" name="Tab1PDF">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -193,9 +193,6 @@
       </property>
      </widget>
      <widget class="QCheckBox" name="Overwrite">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -209,9 +206,6 @@
       </property>
      </widget>
      <widget class="QPushButton" name="Tab1Stop">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
       <property name="geometry">
        <rect>
         <x>100</x>
@@ -430,7 +424,7 @@
   </widget>
   <action name="actionExit_Without_Save">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Exit Without Save</string>
@@ -438,7 +432,7 @@
   </action>
   <action name="actionExit">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Exit</string>

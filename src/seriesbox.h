@@ -8,6 +8,8 @@ class SeriesBox
 public:
    SeriesBox();
    void    SetSeries(QStringList Datas);
+   void    SetVolume(int vol);
+   void    SetChapter(int chapt);
    void    UpdateImageVal();
    void    DecreaseImageVal();
    void    UpdateChapterVal();
@@ -20,6 +22,7 @@ public:
    QString GetImgFolder();
    QString GetURL(int NbOfDigit, QString ExtFile);
    QString GetURL(QString NbOfDigit, QString ExtFile);
+   SeriesBox &operator=(SeriesBox *box);
    int     GetImageVal();
 
 private:

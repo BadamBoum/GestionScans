@@ -24,19 +24,23 @@ public:
 
 signals:
     void SeriesInfo(QStringList, int);
+    void SeriesBoxInfo(QStringList, int);
 
 private slots:
     void slotTab1AddButton();
     void slotOpenFolder();
+    void slotStop();
+    void slotSavCloseWindows();
+    void slotCloseWindows();
     void slotTab1OpenFolder();
     void slotTab1PrintPdf();
     void slotTab1OpenSeriesFolder();
     void AddLineStatusTable(QStringList NewLine);
     void ModifyStatusTable(QStringList NewLine, int Index);
-    void TestUrl(QUrl url);
+    void ModifyVolume(int Idx);
+    void TestUrl(QString urlstr);
     void slotTab1Setting();
     void slotUpdateFolder();
-    void slotTab1Pdf();
     void slotTab1Search();
     void slotTab1SearchOne();
     void slotTab1Delete();
@@ -48,6 +52,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     bool erreurTrouvee = false;
+    bool ended = false;
     SeriesBox CurrentSerie;
     QString GeneralFolder;
     int DownloadSeriesIdx = 0;
