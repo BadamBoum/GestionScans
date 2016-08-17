@@ -96,53 +96,56 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-//   QFile Datafile("datafile.txt");
-//   Datafile.open(QIODevice::WriteOnly);
-//   QTextStream out(&Datafile);
-//   QString temp;
+   if (saveDatas == true)
+   {
+       QFile Datafile("datafile.txt");
+       Datafile.open(QIODevice::WriteOnly);
+       QTextStream out(&Datafile);
+       QString temp;
 
-//   temp.append(ui->Tab3ScanFolderText->text());
-//   temp.append( ";" );
-//   if (ui->Tab3AutoSearch->isChecked())
-//   {
-//       temp.append( "AutoSearch=True" );
-//   }
-//   else
-//   {
-//       temp.append( "AutoSearch=False" );
-//   }
-//   temp.append( ";" );
-//   if (ui->DebugBox->isChecked())
-//   {
-//       temp.append( "Debug=True" );
-//   }
-//   else
-//   {
-//       temp.append( "Debug=False" );
-//   }
-//   temp.append( "\n" );
+       temp.append(ui->Tab3ScanFolderText->text());
+       temp.append( ";" );
+       if (ui->Tab3AutoSearch->isChecked())
+       {
+           temp.append( "AutoSearch=True" );
+       }
+       else
+       {
+           temp.append( "AutoSearch=False" );
+       }
+       temp.append( ";" );
+       if (ui->DebugBox->isChecked())
+       {
+           temp.append( "Debug=True" );
+       }
+       else
+       {
+           temp.append( "Debug=False" );
+       }
+       temp.append( "\n" );
 
-//   for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
-//   {
-//      for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
-//      {
-//         temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
+       for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
+       {
+          for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
+          {
+             temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
 
-//         if (j < ui->Tab2StatusTable->columnCount() - 1)
-//         {
-//             temp.append( ";" );
-//         }
-//      }
-//      if (i < ui->Tab2StatusTable->rowCount() - 1)
-//      {
-//          temp.append( "\n" );
-//      }
-//   }
+             if (j < ui->Tab2StatusTable->columnCount() - 1)
+             {
+                 temp.append( ";" );
+             }
+          }
+          if (i < ui->Tab2StatusTable->rowCount() - 1)
+          {
+              temp.append( "\n" );
+          }
+       }
 
-//   out << temp;
-//   out.flush();
-//   Datafile.flush();
-//   Datafile.close();
+       out << temp;
+       out.flush();
+       Datafile.flush();
+       Datafile.close();
+   }
 
    delete ui;
 }
@@ -209,60 +212,62 @@ void MainWindow::slotStop()
 
 void MainWindow::slotCloseWindows()
 {
-    this->~MainWindow();
+//    saveDatas = false;
+//    this->~MainWindow();
 }
 
 void MainWindow::slotSavCloseWindows()
 {
-    QFile Datafile("datafile.txt");
-    Datafile.open(QIODevice::WriteOnly);
-    QTextStream out(&Datafile);
-    QString temp;
+//    QFile Datafile("datafile.txt");
+//    Datafile.open(QIODevice::WriteOnly);
+//    QTextStream out(&Datafile);
+//    QString temp;
 
-    temp.append(ui->Tab3ScanFolderText->text());
-    temp.append( ";" );
-    if (ui->Tab3AutoSearch->isChecked())
-    {
-        temp.append( "AutoSearch=True" );
-    }
-    else
-    {
-        temp.append( "AutoSearch=False" );
-    }
-    temp.append( ";" );
-    if (ui->DebugBox->isChecked())
-    {
-        temp.append( "Debug=True" );
-    }
-    else
-    {
-        temp.append( "Debug=False" );
-    }
-    temp.append( "\n" );
+//    temp.append(ui->Tab3ScanFolderText->text());
+//    temp.append( ";" );
+//    if (ui->Tab3AutoSearch->isChecked())
+//    {
+//        temp.append( "AutoSearch=True" );
+//    }
+//    else
+//    {
+//        temp.append( "AutoSearch=False" );
+//    }
+//    temp.append( ";" );
+//    if (ui->DebugBox->isChecked())
+//    {
+//        temp.append( "Debug=True" );
+//    }
+//    else
+//    {
+//        temp.append( "Debug=False" );
+//    }
+//    temp.append( "\n" );
 
-    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
-    {
-       for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
-       {
-          temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
+//    for(int i = 0; i < ui->Tab2StatusTable->rowCount(); i++)
+//    {
+//       for(int j = 0; j < ui->Tab2StatusTable->columnCount(); j++)
+//       {
+//          temp.append( (*ui->Tab2StatusTable->item(i,j)).text() );
 
-          if (j < ui->Tab2StatusTable->columnCount() - 1)
-          {
-              temp.append( ";" );
-          }
-       }
-       if (i < ui->Tab2StatusTable->rowCount() - 1)
-       {
-           temp.append( "\n" );
-       }
-    }
+//          if (j < ui->Tab2StatusTable->columnCount() - 1)
+//          {
+//              temp.append( ";" );
+//          }
+//       }
+//       if (i < ui->Tab2StatusTable->rowCount() - 1)
+//       {
+//           temp.append( "\n" );
+//       }
+//    }
 
-    out << temp;
-    out.flush();
-    Datafile.flush();
-    Datafile.close();
+//    out << temp;
+//    out.flush();
+//    Datafile.flush();
+//    Datafile.close();
 
-    this->~MainWindow();
+//    saveDatas = true;
+//    this->~MainWindow();
 }
 
 void MainWindow::slotTab1OpenFolder()

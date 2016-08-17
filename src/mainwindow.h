@@ -53,6 +53,7 @@ private:
     Ui::MainWindow *ui;
     bool erreurTrouvee = false;
     bool ended = false;
+    bool saveDatas = true;
     SeriesBox CurrentSerie;
     QString GeneralFolder;
     int DownloadSeriesIdx = 0;

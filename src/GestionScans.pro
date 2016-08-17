@@ -29,3 +29,5 @@ FORMS    += mainwindow.ui \
     add.ui \
     setting.ui \
     pdf.ui
+
+RC_FILE = myapp.rc
