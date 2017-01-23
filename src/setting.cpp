@@ -47,7 +47,7 @@ void Setting::slotOkButton()
    String.insert(URL,     ui->TextURL->text());
    String.insert(FOLDER,  Folder);
    String.insert(DIGIT,   Digit);
-   String.insert(EXT,     ui->TextURL->text().remove(0, ui->TextURL->text().size()-3));
+   String.insert(EXT,     ui->TextURL->text().remove(0, ui->TextURL->text().size()-4));
    if (ui->BoxWeeklyPDF->isChecked() == true)
    {
       String.insert(WEEKLY, "true");

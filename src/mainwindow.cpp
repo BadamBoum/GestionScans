@@ -383,6 +383,7 @@ void MainWindow::slotTab1Search()
    CurrentStatus.ExtJpg2   = false;
    CurrentStatus.ExtJpg3   = false;
    CurrentStatus.ExtJpg4   = false;
+   CurrentStatus.ExtJpgP   = false;
    CurrentStatus.ExtPng1   = false;
    CurrentStatus.ExtPng2   = false;
    CurrentStatus.ExtPng3   = false;
@@ -409,6 +410,7 @@ void MainWindow::slotTab1SearchOne()
    CurrentStatus.ExtJpg2   = false;
    CurrentStatus.ExtJpg3   = false;
    CurrentStatus.ExtJpg4   = false;
+   CurrentStatus.ExtJpgP   = false;
    CurrentStatus.ExtPng1   = false;
    CurrentStatus.ExtPng2   = false;
    CurrentStatus.ExtPng3   = false;
@@ -502,7 +504,7 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtPng4 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".png"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -512,7 +514,7 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtPng3 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".png"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -522,7 +524,7 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtPng2 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".png"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -532,17 +534,27 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtPng1 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("png"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".png"));
 
                 if(ui->DebugBox->isChecked())
                 {
                    ui->Tab1TextScreen->append("1 Digit / png");
                 }
              }
+             else if (CurrentStatus.ExtJpgP == true)
+             {
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("'.jpg"));
+
+                if(ui->DebugBox->isChecked())
+                {
+                   ui->Tab1TextScreen->append("2 Digit ' / jpg");
+                }
+             }
              else if (CurrentStatus.ExtJpg4 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("4"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".jpg"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -552,7 +564,7 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtJpg3 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("3"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".jpg"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -562,7 +574,7 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtJpg2 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("2"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".jpg"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -572,7 +584,7 @@ void MainWindow::enregistrer()
              else if (CurrentStatus.ExtJpg1 == true)
              {
                 ui->Tab2StatusTable->setItem(DownloadSeriesIdx, DIGIT,   new QTableWidgetItem("1"));
-                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem("jpg"));
+                ui->Tab2StatusTable->setItem(DownloadSeriesIdx, EXT,     new QTableWidgetItem(".jpg"));
 
                 if(ui->DebugBox->isChecked())
                 {
@@ -591,6 +603,7 @@ void MainWindow::enregistrer()
              CurrentStatus.ExtJpg2   = false;
              CurrentStatus.ExtJpg3   = false;
              CurrentStatus.ExtJpg4   = false;
+             CurrentStatus.ExtJpgP   = false;
              CurrentStatus.ExtPng1   = false;
              CurrentStatus.ExtPng2   = false;
              CurrentStatus.ExtPng3   = false;
@@ -680,50 +693,54 @@ void MainWindow::enregistrer()
           if (CurrentStatus.ExtJpg2 == false)
           {
              CurrentStatus.ExtJpg2 = true;
-             TestUrl(CurrentSerie.GetURL(2, "jpg"));
+             TestUrl(CurrentSerie.GetURL(2, ".jpg"));
           }
           else if (CurrentStatus.ExtJpg3 == false)
           {
              CurrentStatus.ExtJpg3 = true;
-             TestUrl(CurrentSerie.GetURL(3, "jpg"));
+             TestUrl(CurrentSerie.GetURL(3, ".jpg"));
           }
           else if (CurrentStatus.ExtJpg4 == false)
           {
              CurrentStatus.ExtJpg4 = true;
-             TestUrl(CurrentSerie.GetURL(4, "jpg"));
+             TestUrl(CurrentSerie.GetURL(4, ".jpg"));
+          }
+          else if (CurrentStatus.ExtJpgP == false)
+          {
+             CurrentStatus.ExtJpgP = true;
+             TestUrl(CurrentSerie.GetURL(2, "'.jpg"));
           }
           else if (CurrentStatus.ExtJpg1 == false)
           {
              CurrentStatus.ExtJpg1 = true;
-             TestUrl(CurrentSerie.GetURL(1, "jpg"));
+             TestUrl(CurrentSerie.GetURL(1, ".jpg"));
           }
           else if (CurrentStatus.ExtPng2 == false)
           {
              CurrentStatus.ExtPng2 = true;
-             TestUrl(CurrentSerie.GetURL(2, "png"));
+             TestUrl(CurrentSerie.GetURL(2, ".png"));
           }
           else if (CurrentStatus.ExtPng3 == false)
           {
              CurrentStatus.ExtPng3 = true;
-             TestUrl(CurrentSerie.GetURL(3, "png"));
+             TestUrl(CurrentSerie.GetURL(3, ".png"));
           }
           else if (CurrentStatus.ExtPng4 == false)
           {
              CurrentStatus.ExtPng4 = true;
-             TestUrl(CurrentSerie.GetURL(4, "png"));
+             TestUrl(CurrentSerie.GetURL(4, ".png"));
           }
           else if (CurrentStatus.ExtPng1 == false)
           {
              CurrentStatus.ExtPng1 = true;
-             TestUrl(CurrentSerie.GetURL(1, "png"));
+             TestUrl(CurrentSerie.GetURL(1, ".png"));
           }
           else if (CurrentStatus.Double == false)
           {
              CurrentStatus.Double = true;
              QString DoubleUrl = CurrentSerie.GetURL(2, "");
-             DoubleUrl.remove(DoubleUrl.size() - 1, 1);
              CurrentSerie.UpdateImageVal();
-             DoubleUrl += "-" + CurrentSerie.GetURL(2, "").remove(0, CurrentSerie.GetURL(2, "").size() - 3) + ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
+             DoubleUrl += "-" + CurrentSerie.GetURL(2, "").remove(0, CurrentSerie.GetURL(2, "").size() - 2) + ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text();
              TestUrl(DoubleUrl);
           }
           else if (CurrentStatus.Np1 == false)
@@ -742,6 +759,7 @@ void MainWindow::enregistrer()
              CurrentStatus.ExtJpg2   = false;
              CurrentStatus.ExtJpg3   = false;
              CurrentStatus.ExtJpg4   = false;
+             CurrentStatus.ExtJpgP   = false;
              CurrentStatus.ExtPng1   = false;
              CurrentStatus.ExtPng2   = false;
              CurrentStatus.ExtPng3   = false;
@@ -761,7 +779,7 @@ void MainWindow::downloadNextImage(bool lastStatus)
 {
    CurrentSerie.UpdateImageVal();
 
-   if (  ((CurrentSerie.GetImageVal() < 100) && (lastStatus == true))
+   if (  ((CurrentSerie.GetImageVal() < 300) && (lastStatus == true))
       || (CurrentSerie.GetImageVal() < 5))
    {
       TestUrl(CurrentSerie.GetURL(ui->Tab2StatusTable->item(DownloadSeriesIdx, DIGIT)->text(), ui->Tab2StatusTable->item(DownloadSeriesIdx, EXT)->text()));

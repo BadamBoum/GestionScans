@@ -65,6 +65,7 @@ private:
        bool ExtJpg2 = false;
        bool ExtJpg3 = false;
        bool ExtJpg4 = false;
+       bool ExtJpgP = false;
        bool ExtPng1 = false;
        bool ExtPng2 = false;
        bool ExtPng3 = false;

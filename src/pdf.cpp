@@ -63,7 +63,6 @@ void PDF::slotPrintButton()
         pdfWriter.setMargins(margins);
         QPixmap pixmap;
         QPainter painter;
-        painter.begin(&pdfWriter);
 
         while ((monRepertoire.exists()) && (ui->EndChap->value() >= SeriesInfos.GetChapter().toInt()))
         {
@@ -78,7 +77,14 @@ void PDF::slotPrintButton()
                     {
                         if (ui->Vertical->isChecked())
                         {
-                            if (firstpage == false) pdfWriter.newPage();
+                            if (firstpage == false)
+                            {
+                                pdfWriter.newPage();
+                            }
+                            else
+                            {
+                                painter.begin(&pdfWriter);
+                            }
                             QTransform t;
                             pixmap = pixmap.transformed(t.rotate(90),Qt::SmoothTransformation);
                             painter.drawPixmap(QRectF(0, 0, pdfWriter.width(), pdfWriter.height()), pixmap, QRectF(0, 0, pixmap.width(), pixmap.height()));
@@ -86,14 +92,28 @@ void PDF::slotPrintButton()
                         else
                         {
                             pdfWriter.setPageOrientation(QPageLayout::Landscape);
-                            if (firstpage == false) pdfWriter.newPage();
+                            if (firstpage == false)
+                            {
+                                pdfWriter.newPage();
+                            }
+                            else
+                            {
+                                painter.begin(&pdfWriter);
+                            }
                             painter.drawPixmap(QRectF(0, 0, pdfWriter.width(), pdfWriter.height()), pixmap, QRectF(0, 0, pixmap.width(), pixmap.height()));
                             pdfWriter.setPageOrientation(QPageLayout::Portrait);
                         }
                     }
                     else
                     {
-                        if (firstpage == false) pdfWriter.newPage();
+                        if (firstpage == false)
+                        {
+                            pdfWriter.newPage();
+                        }
+                        else
+                        {
+                            painter.begin(&pdfWriter);
+                        }
                         painter.drawPixmap(QRectF(0, 0, pdfWriter.width(), pdfWriter.height()), pixmap, QRectF(0, 0, pixmap.width(), pixmap.height()));
                     }
                     firstpage = false;

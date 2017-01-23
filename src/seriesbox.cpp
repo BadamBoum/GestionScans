@@ -157,7 +157,7 @@ QString SeriesBox::GetURL(int NbOfDigit, QString ExtFile)
    imageURL.replace("[Chapter]", ChapterVal);
    imageURL.replace("[Image]", convertion);
 
-   imageURL.remove(imageURL.size() - 3, 3);
+   imageURL.remove(imageURL.size() - 4, 4);
    imageURL += ExtFile;
 
    return imageURL;
